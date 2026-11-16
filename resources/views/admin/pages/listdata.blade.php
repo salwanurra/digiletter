@@ -43,6 +43,8 @@ List Data Surat
             <a href="{{ route('export-surat-pindah-kuliah') }}" class="btn btn-success">Export Excel</a>
             @elseif(request()->is('admin/listdata/suratpengantarmagang'))
             <a href="{{ route('export-surat-pengantar-magang') }}" class="btn btn-success">Export Excel</a>
+            @elseif(request()->is('admin/listdata/suratrekomendasisept'))
+            <a href="{{ route('export-surat-rekomendasi-sept') }}" class="btn btn-success">Export Excel</a>
             @endif
         </div>
         <div class="card-datatable table-responsive pt-0">
@@ -56,6 +58,10 @@ List Data Surat
                         <th>Nama Mahasiswa</th>
                         <th>NPM</th>
                         <th>Prodi</th>
+                        @if($jenisSurat === 'Surat Rekomendasi Mengikuti SEP-T')
+                        <th>Semester</th>
+                        <th>Nomor HP</th>
+                        @endif
                         <th>Lampiran</th>
                         <th style="width:200px;">Aktivitas</th>
                         <th>Tanggal Approve</th>
@@ -79,6 +85,10 @@ List Data Surat
                         <td>{{ $d->nama_mhs }}</td>
                         <td>{{ $d->npm }}</td>
                         <td>{{ $d->prodi }}</td>
+                        @if($jenisSurat === 'Surat Rekomendasi Mengikuti SEP-T')
+                        <td>{{ $d->semester }}</td>
+                        <td>{{ $d->no_hp }}</td>
+                        @endif
                         <td>
                             <!--@if($d->bukti_pembayaran)-->
                             <!--<img src="{{ asset('laravel/storage/app/public/bukti-pembayaran/' . $d->bukti_pembayaran) }}" class="img-thumbnail" alt="Bukti telah membayar UKT" style="max-width: 80px;" data-bs-toggle="modal" data-bs-target="#gambarModalBuktiPembayaran" onclick="showModalBuktiPembayaran('{{ asset('laravel/storage/app/public/bukti-pembayaran/' . $d->bukti_pembayaran) }}')">-->
@@ -125,6 +135,9 @@ List Data Surat
                             }
                             elseif ($d->jenis_surat == 'Surat Pengantar Magang') {
                             $folder = 'surat-pengantar-magang';
+                            }
+                            elseif ($d->jenis_surat == 'Surat Rekomendasi Mengikuti SEP-T') {
+                            $folder = 'surat-rekomendasi-sept';
                             }
                             else {
                             $folder = '';
@@ -197,6 +210,13 @@ List Data Surat
                             $setujuiRoute = "/setujui-surat-pengantar-magang/{$d->id}";
                             $tidakSetujuRoute = "/tidaksetuju-surat-pengantar-magang/{$d->id}";
                             $cancelRoute = "/cancelsurat-pengantar-magang/{$d->id}";
+                            @endphp
+
+                            @elseif($d instanceof App\Models\SuratRekomendasiSept)
+                            @php
+                            $setujuiRoute = "/setujui-surat-rekomendasi-sept/{$d->id}";
+                            $tidakSetujuRoute = "/tidaksetuju-surat-rekomendasi-sept/{$d->id}";
+                            $cancelRoute = "/cancelsurat-rekomendasi-sept/{$d->id}";
                             @endphp
 
                             @else

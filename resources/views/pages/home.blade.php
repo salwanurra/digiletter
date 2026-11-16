@@ -126,6 +126,17 @@ Home
                     </div>
                 </div>
             </div>
+            <div class="col-lg-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Surat Rekomendasi Mengikuti SEP-T</h5>
+                        <p class="card-text">
+                            Surat rekomendasi untuk mengikuti SEP-T sebagai salah satu persyaratan Sidang Tugas Akhir.
+                        </p>
+                        <a href="{{ route('suratrekomendasisept.create', ['id' => auth()->id()]) }}" class="btn btn-secondary">Buat Surat</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

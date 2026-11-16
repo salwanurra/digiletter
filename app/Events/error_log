@@ -1,0 +1,93 @@
+[03-Sep-2025 04:14:18 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php on line 13
+[03-Sep-2025 04:14:18 UTC] PHP Stack trace:
+[03-Sep-2025 04:14:18 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php:0
+[17-Nov-2025 07:21:46 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php on line 13
+[17-Nov-2025 07:21:46 UTC] PHP Stack trace:
+[17-Nov-2025 07:21:46 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php:0
+[17-Nov-2025 07:29:10 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php on line 13
+[17-Nov-2025 07:29:10 UTC] PHP Stack trace:
+[17-Nov-2025 07:29:10 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php:0
+[30-Jan-2026 17:06:22 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php on line 13
+[30-Jan-2026 17:06:22 UTC] PHP Stack trace:
+[30-Jan-2026 17:06:22 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php:0
+[30-Jan-2026 17:11:28 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php on line 13
+[30-Jan-2026 17:11:28 UTC] PHP Stack trace:
+[30-Jan-2026 17:11:28 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php:0
+[04-Jun-2026 07:25:43 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php on line 13
+[04-Jun-2026 07:25:43 UTC] PHP Stack trace:
+[04-Jun-2026 07:25:43 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php:0
+[04-Jun-2026 07:30:50 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php on line 13
+[04-Jun-2026 07:30:50 UTC] PHP Stack trace:
+[04-Jun-2026 07:30:50 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php:0
+[05-Jun-2026 21:58:30 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php on line 13
+[05-Jun-2026 21:58:30 UTC] PHP Stack trace:
+[05-Jun-2026 21:58:30 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php:0
+[05-Jun-2026 21:58:48 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php on line 13
+[05-Jun-2026 21:58:48 UTC] PHP Stack trace:
+[05-Jun-2026 21:58:48 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php:0
+[12-Jul-2026 04:45:47 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php on line 13
+[12-Jul-2026 04:45:47 UTC] PHP Stack trace:
+[12-Jul-2026 04:45:47 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php:0
+[12-Jul-2026 04:53:24 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php on line 13
+[12-Jul-2026 04:53:24 UTC] PHP Stack trace:
+[12-Jul-2026 04:53:24 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php:0
+[18-Aug-2026 06:16:43 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php on line 13
+[18-Aug-2026 06:16:43 UTC] PHP Stack trace:
+[18-Aug-2026 06:16:43 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php:0
+[18-Aug-2026 06:16:43 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php on line 13
+[18-Aug-2026 06:16:43 UTC] PHP Stack trace:
+[18-Aug-2026 06:16:43 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php:0
+[18-Sep-2026 21:28:28 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php on line 13
+[18-Sep-2026 21:28:28 UTC] PHP Stack trace:
+[18-Sep-2026 21:28:28 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php:0
+[18-Sep-2026 21:28:29 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php on line 13
+[18-Sep-2026 21:28:29 UTC] PHP Stack trace:
+[18-Sep-2026 21:28:29 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php:0
+[19-Sep-2026 10:39:34 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php on line 13
+[19-Sep-2026 10:39:34 UTC] PHP Stack trace:
+[19-Sep-2026 10:39:34 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php:0
+[19-Sep-2026 10:39:35 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php on line 13
+[19-Sep-2026 10:39:35 UTC] PHP Stack trace:
+[19-Sep-2026 10:39:35 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php:0
+[28-Sep-2026 19:59:43 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php on line 13
+[28-Sep-2026 19:59:43 UTC] PHP Stack trace:
+[28-Sep-2026 19:59:43 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php:0
+[28-Sep-2026 19:59:43 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php on line 13
+[28-Sep-2026 19:59:43 UTC] PHP Stack trace:
+[28-Sep-2026 19:59:43 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php:0
+[29-Sep-2026 04:56:48 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php on line 13
+[29-Sep-2026 04:56:48 UTC] PHP Stack trace:
+[29-Sep-2026 04:56:48 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php:0
+[29-Sep-2026 04:56:49 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php on line 13
+[29-Sep-2026 04:56:49 UTC] PHP Stack trace:
+[29-Sep-2026 04:56:49 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php:0
+[30-Sep-2026 21:32:39 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php on line 13
+[30-Sep-2026 21:32:39 UTC] PHP Stack trace:
+[30-Sep-2026 21:32:39 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php:0
+[30-Sep-2026 21:32:40 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php on line 13
+[30-Sep-2026 21:32:40 UTC] PHP Stack trace:
+[30-Sep-2026 21:32:40 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php:0
+[02-Oct-2026 15:20:37 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php on line 13
+[02-Oct-2026 15:20:37 UTC] PHP Stack trace:
+[02-Oct-2026 15:20:37 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php:0
+[02-Oct-2026 15:20:38 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php on line 13
+[02-Oct-2026 15:20:38 UTC] PHP Stack trace:
+[02-Oct-2026 15:20:38 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php:0
+[13-Oct-2026 05:01:08 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php on line 13
+[13-Oct-2026 05:01:08 UTC] PHP Stack trace:
+[13-Oct-2026 05:01:08 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php:0
+[13-Oct-2026 05:01:09 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php on line 13
+[13-Oct-2026 05:01:09 UTC] PHP Stack trace:
+[13-Oct-2026 05:01:09 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php:0
+[27-Oct-2026 21:37:16 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php on line 13
+[27-Oct-2026 21:37:16 UTC] PHP Stack trace:
+[27-Oct-2026 21:37:16 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php:0
+[27-Oct-2026 21:37:16 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php on line 13
+[27-Oct-2026 21:37:16 UTC] PHP Stack trace:
+[27-Oct-2026 21:37:16 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php:0
+[10-Nov-2026 08:51:07 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php on line 13
+[10-Nov-2026 08:51:07 UTC] PHP Stack trace:
+[10-Nov-2026 08:51:07 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/DataApproved.php:0
+[10-Nov-2026 08:51:07 UTC] PHP Fatal error:  Trait "Illuminate\Foundation\Events\Dispatchable" not found in /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php on line 13
+[10-Nov-2026 08:51:07 UTC] PHP Stack trace:
+[10-Nov-2026 08:51:07 UTC] PHP   1. {main}() /home/nuogwcpc/public_html/digiletter/app/Events/UserDataInput.php:0

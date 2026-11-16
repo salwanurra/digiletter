@@ -64,6 +64,8 @@
                                          {{ route('riwayat-surat-observasi') }}
                                          @elseif($notification->data['jenis_surat'] === 'Surat Pindah Kuliah')
                                          {{ route('riwayat-surat-pindah-kuliah') }}
+                                         @elseif($notification->data['jenis_surat'] === 'Surat Rekomendasi Mengikuti SEP-T')
+                                         {{ route('riwayat-surat-rekomendasi-sept') }}
                                          @else
                                          {{ route('home') }}
                                          @endif

@@ -16,6 +16,7 @@ use App\Http\Controllers\SuratPengunduranDiriController;
 use App\Http\Controllers\SuratObservasiController;
 use App\Http\Controllers\SuratPindahKuliahController;
 use App\Http\Controllers\SuratPengantarMagangController;
+use App\Http\Controllers\SuratRekomendasiSeptController;
 use App\Http\Controllers\ChartController;
 use Illuminate\Support\Facades\Artisan;
 
@@ -72,6 +73,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/suratpindahkuliah', [SuratPindahKuliahController::class, 'store'])->name('suratpindahkuliah.store');
     Route::get('/suratpengantarmagang/create/{id}', [SuratPengantarMagangController::class, 'create'])->name('suratpengantarmagang.create');
     Route::post('/suratpengantarmagang', [SuratPengantarMagangController::class, 'store'])->name('suratpengantarmagang.store');
+    Route::get('/suratrekomendasisept/create/{id}', [SuratRekomendasiSeptController::class, 'create'])->name('suratrekomendasisept.create');
+    Route::post('/suratrekomendasisept', [SuratRekomendasiSeptController::class, 'store'])->name('suratrekomendasisept.store');
 
     // riwayat surat
     Route::get('/riwayat-surat-izin-penelitian', [SuratIzinPenelitianController::class, 'riwayatSuratIzinPenelitian'])->name('riwayat-surat-izin-penelitian');
@@ -83,6 +86,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/riwayat-observasi', [SuratObservasiController::class, 'riwayatSuratObservasi'])->name('riwayat-surat-observasi');
     Route::get('/riwayat-surat-pindah-kuliah', [SuratPindahKuliahController::class, 'riwayatSuratPindahKuliah'])->name('riwayat-surat-pindah-kuliah');
     Route::get('/riwayat-surat-pengantar-magang', [SuratPengantarMagangController::class, 'riwayatSuratPengantarMagang'])->name('riwayat-surat-pengantar-magang');
+    Route::get('/riwayat-surat-rekomendasi-sept', [SuratRekomendasiSeptController::class, 'riwayatSuratRekomendasiSept'])->name('riwayat-surat-rekomendasi-sept');
 
     // download surat
     Route::get('/download-surat/{folders}/{file_path}', [UserController::class, 'downloadSurat'])->name('download-surat');
@@ -112,6 +116,7 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/admin/listdata/suratobservasi', [AdminController::class, 'listdataSuratObservasi'])->name('listdata.suratobservasi');
     Route::get('/admin/listdata/suratpindahkuliah', [AdminController::class, 'listdataSuratPindahKuliah'])->name('listdata.suratpindahkuliah');
     Route::get('/admin/listdata/suratpengantarmagang', [AdminController::class, 'listdataSuratPengantarMagang'])->name('listdata.suratpengantarmagang');
+    Route::get('/admin/listdata/suratrekomendasisept', [AdminController::class, 'listdataSuratRekomendasiSept'])->name('listdata.suratrekomendasisept');
 
     Route::get('/markasread/{id}', [AdminController::class, 'markAsRead'])->name('markasread');
 
@@ -152,6 +157,10 @@ Route::middleware(['admin'])->group(function () {
     Route::post('/tidaksetuju-surat-pengantar-magang/{id}', [SuratPengantarMagangController::class, 'tidaksetujuSuratPengantarMagang']);
     Route::delete('/cancelsurat-pengantar-magang/{id}', [SuratPengantarMagangController::class, 'cancelsuratPengantarMagang']);
 
+    Route::post('/setujui-surat-rekomendasi-sept/{id}', [SuratRekomendasiSeptController::class, 'setujuiSuratRekomendasiSept']);
+    Route::post('/tidaksetuju-surat-rekomendasi-sept/{id}', [SuratRekomendasiSeptController::class, 'tidaksetujuSuratRekomendasiSept']);
+    Route::delete('/cancelsurat-rekomendasi-sept/{id}', [SuratRekomendasiSeptController::class, 'cancelsuratRekomendasiSept']);
+
     // Bukti telah membayar UKT
     Route::get('/admin/bukti-pembayaran/{filename}', [AdminController::class, 'viewPembayaran'])->name('admin.pembayaran');
 
@@ -180,6 +189,7 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/export-surat-observasi', [AdminController::class, 'exportSuratObservasi'])->name('export-surat-observasi');
     Route::get('/export-surat-pindah-kuliah', [AdminController::class, 'exportSuratPindahKuliah'])->name('export-surat-pindah-kuliah');
     Route::get('/export-surat-pengantar-magang', [AdminController::class, 'exportSuratPengantarMagang'])->name('export-surat-pengantar-magang');
+    Route::get('/export-surat-rekomendasi-sept', [AdminController::class, 'exportSuratRekomendasiSept'])->name('export-surat-rekomendasi-sept');
     
       // import excel
     Route::post('/admin/data-mahasiswa/import', [AdminController::class, 'importExcel'])->name('import.mahasiswa');

@@ -1,0 +1,152 @@
+[03-Sep-2025 03:58:58 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php on line 10
+[17-Nov-2025 07:05:41 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php on line 10
+[17-Nov-2025 07:15:28 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php on line 11
+[30-Jan-2026 16:55:47 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php on line 10
+[30-Jan-2026 17:01:33 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php on line 11
+[04-Jun-2026 07:15:34 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php on line 10
+[04-Jun-2026 07:21:06 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php on line 11
+[12-Jul-2026 04:33:14 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php on line 10
+[12-Jul-2026 04:40:06 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php on line 11
+[18-Aug-2026 06:16:50 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php on line 11
+[18-Aug-2026 06:16:50 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php on line 10
+[18-Sep-2026 21:28:32 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php on line 10
+[18-Sep-2026 21:28:33 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php on line 11
+[18-Sep-2026 21:28:33 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php on line 10
+[19-Sep-2026 10:38:30 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php on line 11
+[19-Sep-2026 10:38:30 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php on line 10
+[19-Sep-2026 10:38:31 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php on line 10
+[28-Sep-2026 19:59:49 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php on line 11
+[28-Sep-2026 19:59:49 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php on line 10
+[28-Sep-2026 19:59:50 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php on line 10
+[29-Sep-2026 04:56:55 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php on line 11
+[29-Sep-2026 04:56:55 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php on line 10
+[29-Sep-2026 04:56:56 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php on line 10
+[30-Sep-2026 21:32:45 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php on line 11
+[30-Sep-2026 21:32:46 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php on line 10
+[30-Sep-2026 21:32:46 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php on line 10
+[02-Oct-2026 15:20:45 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php on line 11
+[02-Oct-2026 15:20:46 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php on line 10
+[02-Oct-2026 15:20:47 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php on line 10
+[13-Oct-2026 05:01:15 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php on line 11
+[13-Oct-2026 05:01:16 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php on line 10
+[13-Oct-2026 05:01:16 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php on line 10
+[27-Oct-2026 21:37:23 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php on line 11
+[27-Oct-2026 21:37:24 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php on line 10
+[27-Oct-2026 21:37:24 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php on line 10
+[10-Nov-2026 08:51:14 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php:11
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/AdminNotification.php on line 11
+[10-Nov-2026 08:51:14 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/ResetPasswordNotification.php on line 10
+[10-Nov-2026 08:51:15 UTC] PHP Fatal error:  Uncaught Error: Class "Illuminate\Notifications\Notification" not found in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Notifications/UserNotifcation.php on line 10

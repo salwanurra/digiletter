@@ -1,0 +1,64 @@
+[26-Aug-2025 12:55:22 UTC] PHP Fatal error:  Uncaught Error: Interface "Maatwebsite\Excel\Concerns\ToModel" not found in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php on line 12
+[17-Nov-2025 07:20:06 UTC] PHP Fatal error:  Uncaught Error: Interface "Maatwebsite\Excel\Concerns\ToModel" not found in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php on line 12
+[30-Jan-2026 17:05:11 UTC] PHP Fatal error:  Uncaught Error: Interface "Maatwebsite\Excel\Concerns\ToModel" not found in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php on line 12
+[04-Jun-2026 07:24:30 UTC] PHP Fatal error:  Uncaught Error: Interface "Maatwebsite\Excel\Concerns\ToModel" not found in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php on line 12
+[12-Jul-2026 04:44:29 UTC] PHP Fatal error:  Uncaught Error: Interface "Maatwebsite\Excel\Concerns\ToModel" not found in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php on line 12
+[18-Aug-2026 06:16:47 UTC] PHP Fatal error:  Uncaught Error: Interface "Maatwebsite\Excel\Concerns\ToModel" not found in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php on line 12
+[05-Sep-2026 15:42:50 UTC] PHP Fatal error:  Uncaught Error: Interface "Maatwebsite\Excel\Concerns\ToModel" not found in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php on line 12
+[18-Sep-2026 21:28:31 UTC] PHP Fatal error:  Uncaught Error: Interface "Maatwebsite\Excel\Concerns\ToModel" not found in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php on line 12
+[20-Sep-2026 12:43:20 UTC] PHP Fatal error:  Uncaught Error: Interface "Maatwebsite\Excel\Concerns\ToModel" not found in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php on line 12
+[28-Sep-2026 19:59:46 UTC] PHP Fatal error:  Uncaught Error: Interface "Maatwebsite\Excel\Concerns\ToModel" not found in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php on line 12
+[29-Sep-2026 04:56:51 UTC] PHP Fatal error:  Uncaught Error: Interface "Maatwebsite\Excel\Concerns\ToModel" not found in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php on line 12
+[30-Sep-2026 21:32:41 UTC] PHP Fatal error:  Uncaught Error: Interface "Maatwebsite\Excel\Concerns\ToModel" not found in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php on line 12
+[02-Oct-2026 15:20:42 UTC] PHP Fatal error:  Uncaught Error: Interface "Maatwebsite\Excel\Concerns\ToModel" not found in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php on line 12
+[13-Oct-2026 05:01:11 UTC] PHP Fatal error:  Uncaught Error: Interface "Maatwebsite\Excel\Concerns\ToModel" not found in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php on line 12
+[27-Oct-2026 21:37:20 UTC] PHP Fatal error:  Uncaught Error: Interface "Maatwebsite\Excel\Concerns\ToModel" not found in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php on line 12
+[10-Nov-2026 08:51:10 UTC] PHP Fatal error:  Uncaught Error: Interface "Maatwebsite\Excel\Concerns\ToModel" not found in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/nuogwcpc/public_html/digiletter/app/Imports/MahasiswaImport.php on line 12

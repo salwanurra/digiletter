@@ -63,6 +63,11 @@
                                 <div data-i18n="Surat Bebas Pustaka">Surat Pengantar Magang</div>
                             </a>
                         </li>
+                        <li class="menu-item {{ request()->routeIs('riwayat-surat-rekomendasi-sept') ? 'active' : '' }}">
+                            <a href="{{ route('riwayat-surat-rekomendasi-sept') }}" class="menu-link">
+                                <div data-i18n="Surat Rekomendasi Mengikuti SEP-T">Surat Rekomendasi Mengikuti SEP-T</div>
+                            </a>
+                        </li>
                         <li class="menu-item {{ request()->routeIs('riwayat-surat-pengajuan-cuti') ? 'active' : '' }}">
                             <a href="{{ route('riwayat-surat-pengajuan-cuti') }}" class="menu-link">
                                 <div data-i18n="Surat Pengajuan Cuti">Surat Pengajuan Cuti</div>

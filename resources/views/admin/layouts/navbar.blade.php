@@ -61,6 +61,8 @@
                                          {{ route('listdata.suratpengajuancuti') }}
                                          @elseif($notification->data['jenis_surat'] === 'Surat Pengantar Magang')
                                          {{ route('listdata.suratpengantarmagang') }}
+                                         @elseif($notification->data['jenis_surat'] === 'Surat Rekomendasi Mengikuti SEP-T')
+                                         {{ route('listdata.suratrekomendasisept') }}
                                          @else
                                          {{ route('home.admin') }}
                                          @endif

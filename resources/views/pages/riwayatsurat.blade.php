@@ -103,6 +103,9 @@ Riwayat Surat
                             elseif ($d->jenis_surat == 'Surat Pengantar Magang') {
                             $folder = 'surat-pengantar-magang';
                             }
+                            elseif ($d->jenis_surat == 'Surat Rekomendasi Mengikuti SEP-T') {
+                            $folder = 'surat-rekomendasi-sept';
+                            }
                             else {
                             $folder = '';
                             }

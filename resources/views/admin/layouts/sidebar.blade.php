@@ -73,6 +73,11 @@
                                 <div data-i18n="Surat Pengantar Magang">Surat Pengantar Magang</div>
                             </a>
                         </li>
+                        <li class="menu-item {{ request()->is('admin/listdata/suratrekomendasisept') ? 'active' : '' }}">
+                            <a href="{{ route('listdata.suratrekomendasisept') }}" class="menu-link">
+                                <div data-i18n="Surat Rekomendasi Mengikuti SEP-T">Surat Rekomendasi Mengikuti SEP-T</div>
+                            </a>
+                        </li>
                         <li class="menu-item {{ request()->is('admin/listdata/suratpengajuancuti') ? 'active' : '' }}">
                             <a href="{{ route('listdata.suratpengajuancuti') }}" class="menu-link">
                                 <div data-i18n="Surat Pengajuan Cuti">Surat Pengajuan Cuti</div>
