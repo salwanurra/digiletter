@@ -10,7 +10,45 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🚚 Get latest code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, gd, zip, bcmath, pdo_mysql
+          tools: composer:v2
+          coverage: none
+
+      - name: Install production PHP dependencies
+        run: composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Build frontend assets
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+          test -s public/build/manifest.json
+          test -d public/build/assets
+
+      - name: Prepare production files
+        env:
+          PRODUCTION_ENV_BASE64: ${{ secrets.PRODUCTION_ENV_BASE64 }}
+          GOOGLE_DRIVE_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS_BASE64 }}
+        run: |
+          if [ -n "$PRODUCTION_ENV_BASE64" ]; then
+            printf '%s' "$PRODUCTION_ENV_BASE64" | base64 --decode > .env
+          fi
+          if [ -n "$GOOGLE_DRIVE_CREDENTIALS_BASE64" ]; then
+            mkdir -p storage/app/google
+            printf '%s' "$GOOGLE_DRIVE_CREDENTIALS_BASE64" | base64 --decode > storage/app/google/credentials.json
+          fi
+          rm -f public/hot
 
       - name: 📂 Upload to Prod FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -18,3 +56,13 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          local-dir: ./
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            storage/framework/sessions/**
+            storage/logs/**
+            public/template/vendor/**
