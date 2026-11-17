@@ -18,6 +18,8 @@ use App\Http\Controllers\SuratPindahKuliahController;
 use App\Http\Controllers\SuratPengantarMagangController;
 use App\Http\Controllers\SuratRekomendasiSeptController;
 use App\Http\Controllers\ChartController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 
 
@@ -43,6 +45,29 @@ Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/register', [RegistController::class, 'index'])->name('regist');
 Route::post('/register', [RegistController::class, 'create'])->name('post_regist');
 Route::post('/cek-npm', [RegistController::class, 'cekNPM'])->name('cek-npm');
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+
+    return redirect()->route('home')->with('success', 'Email berhasil diverifikasi.');
+})->middleware(['auth', 'signed', 'throttle:6,1'])->name('verification.verify');
+Route::post('/email/verification-notification', function (Request $request) {
+    if ($request->user()->hasVerifiedEmail()) {
+        return redirect()->route('home');
+    }
+
+    try {
+        $request->user()->sendEmailVerificationNotification();
+    } catch (\Throwable $exception) {
+        report($exception);
+
+        return back()->with('warning', 'Email verifikasi belum dapat dikirim. Silakan coba lagi.');
+    }
+
+    return back()->with('status', 'verification-link-sent');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 Route::get('forgotpw', [ForgotPWController::class, 'index'])->name('forgot-pw');
 Route::post('forgotpw', [ForgotPWController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('reset-password/{token}', [ForgotPWController::class, 'showResetForm'])->name('password.reset');
@@ -51,7 +76,7 @@ Route::get('/chart', [ChartController::class, 'index'])->name('chart');
 
 
 // ======== user =============
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/home', [UserController::class, 'home'])->name('home');
 
     // pembuatan surat
