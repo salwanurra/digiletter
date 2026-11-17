@@ -42,7 +42,7 @@ Register
                         <label for="npm" class="form-label">NPM</label>
                         <div class=" d-flex gap-2">
                             <div class="">
-                                <input type="text" class="form-control numeric-input npm w-100" id="npm" name="npm" placeholder="Masukkan npm" required />
+                                <input type="text" class="form-control numeric-input npm w-100" id="npm" name="npm" placeholder="Masukkan npm" value="{{ old('npm') }}" required />
                                 @error('npm')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -54,13 +54,16 @@ Register
                     </div>
                 </form>
                 
-                @if ($mahasiswa)
+                @if (!empty($mahasiswa))
+                <div class="alert alert-success">
+                    Data mahasiswa berhasil diverifikasi.
+                </div>
                 <form class="mb-3" action="{{route('post_regist')}}" method="POST">
                     @csrf
-                    <input type="hidden" name="npm" value="{{ $mahasiswa['nim'] }}">
+                    <input type="hidden" name="npm" value="{{ $mahasiswa['npm'] }}">
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama Lengkap</label>
-                        <input type="text" class="form-control alphabet-input" id="name" name="name" placeholder="Masukkan nama lengkap" value="{{ $mahasiswa['nama_mahasiswa'] }}" readonly />
+                        <input type="text" class="form-control alphabet-input" id="name" value="{{ $mahasiswa['nama_mahasiswa'] }}" readonly />
                         @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}

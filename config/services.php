@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'kampus' => [
+        'base_url' => env('API_KAMPUS_BASE_URL'),
+        'token' => env('API_KAMPUS_TOKEN'),
+    ],
+
 ];

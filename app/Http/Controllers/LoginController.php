@@ -31,13 +31,14 @@ class LoginController extends Controller
             'password' => $request->input('password'),
         ];
         if (Auth::attempt($data)) {
+            $request->session()->regenerate();
 
             $user = Auth::user();
 
             if ($user->role === 'admin') {
                 return redirect()->route('home.admin');
             }elseif ($user->role === 'user'){
-                return redirect()->route('home');
+                return redirect()->intended(route('home'));
             }
         } else {
             Session::flash('error', 'Email atau Password Salah');
