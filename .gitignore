@@ -9,6 +9,7 @@
 .env.production
 .env_prod
 .htaccess
+!public/.htaccess
 .phpactor.json
 .phpunit.result.cache
 Homestead.json
