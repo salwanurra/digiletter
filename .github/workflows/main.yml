@@ -63,6 +63,7 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
+            vendor/**
             storage/framework/sessions/**
             storage/logs/**
             public/template/vendor/**
