@@ -38,6 +38,11 @@
                         <div data-i18n="Data Mahasiswa">Data Mahasiswa</div>
                     </a>
                 </li>
+                <li class="menu-item {{ request()->routeIs('admin.campus-identities.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.campus-identities.index') }}" class="menu-link">
+                        <div data-i18n="Verifikasi Identitas">Verifikasi Identitas</div>
+                    </a>
+                </li>
                 <li class="menu-item">
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <div data-i18n="List Data">List Data</div>

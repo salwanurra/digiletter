@@ -1,27 +1,28 @@
 <?php
 
-use App\Http\Controllers\Home;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminCampusIdentityController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CampusIdentityController;
+use App\Http\Controllers\ChartController;
+use App\Http\Controllers\ForgotPWController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegistController;
-use App\Http\Controllers\ForgotPWController;
 use App\Http\Controllers\SuratBebasPustakaController;
 use App\Http\Controllers\SuratIzinPenelitianController;
 use App\Http\Controllers\SuratKeteranganAktifController;
 use App\Http\Controllers\SuratKeteranganAktifOrtuPnsController;
-use App\Http\Controllers\SuratPengajuanCutiController;
-use App\Http\Controllers\SuratPengunduranDiriController;
 use App\Http\Controllers\SuratObservasiController;
-use App\Http\Controllers\SuratPindahKuliahController;
+use App\Http\Controllers\SuratPengajuanCutiController;
 use App\Http\Controllers\SuratPengantarMagangController;
+use App\Http\Controllers\SuratPengunduranDiriController;
+use App\Http\Controllers\SuratPindahKuliahController;
 use App\Http\Controllers\SuratRekomendasiSeptController;
-use App\Http\Controllers\ChartController;
+use App\Http\Controllers\UserController;
+use App\Services\VerificationEmailCooldown;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
-
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +35,6 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
-
 // ======== auth ============
 Route::get('/', function () {
     return redirect()->away('https://panduan.marooners.my.id');
@@ -45,38 +45,55 @@ Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/register', [RegistController::class, 'index'])->name('regist');
 Route::post('/register', [RegistController::class, 'create'])->name('post_regist');
 Route::post('/cek-npm', [RegistController::class, 'cekNPM'])->name('cek-npm');
-Route::get('/email/verify', function () {
-    return view('auth.verify-email');
+Route::get('/email/verify', function (Request $request, VerificationEmailCooldown $cooldown) {
+    return view('auth.verify-email', [
+        'retryAfter' => $cooldown->remaining($request->user()),
+    ]);
 })->middleware('auth')->name('verification.notice');
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request, VerificationEmailCooldown $cooldown) {
     $request->fulfill();
+    $cooldown->clear($request->user());
 
     return redirect()->route('home')->with('success', 'Email berhasil diverifikasi.');
 })->middleware(['auth', 'signed', 'throttle:6,1'])->name('verification.verify');
-Route::post('/email/verification-notification', function (Request $request) {
+Route::post('/email/verification-notification', function (Request $request, VerificationEmailCooldown $cooldown) {
     if ($request->user()->hasVerifiedEmail()) {
         return redirect()->route('home');
+    }
+
+    if (! $cooldown->acquire($request->user())) {
+        $seconds = $cooldown->remaining($request->user());
+
+        return back()->with('warning', "Tunggu {$seconds} detik sebelum mengirim ulang email verifikasi.");
     }
 
     try {
         $request->user()->sendEmailVerificationNotification();
     } catch (\Throwable $exception) {
+        $cooldown->clear($request->user());
         report($exception);
 
         return back()->with('warning', 'Email verifikasi belum dapat dikirim. Silakan coba lagi.');
     }
 
     return back()->with('status', 'verification-link-sent');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+})->middleware('auth')->name('verification.send');
 Route::get('forgotpw', [ForgotPWController::class, 'index'])->name('forgot-pw');
 Route::post('forgotpw', [ForgotPWController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('reset-password/{token}', [ForgotPWController::class, 'showResetForm'])->name('password.reset');
 Route::post('reset-password', [ForgotPWController::class, 'reset'])->name('password.update');
 Route::get('/chart', [ChartController::class, 'index'])->name('chart');
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/verifikasi-identitas-kampus', [CampusIdentityController::class, 'show'])
+        ->name('campus-identity.show');
+    Route::post('/verifikasi-identitas-kampus', [CampusIdentityController::class, 'submit'])
+        ->middleware('throttle:5,1')
+        ->name('campus-identity.submit');
+});
 
 // ======== user =============
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'campus.verified'])->group(function () {
     Route::get('/home', [UserController::class, 'home'])->name('home');
 
     // pembuatan surat
@@ -128,8 +145,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // ======== admin ============
 Route::middleware(['admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'home'])->name('home.admin');
+    Route::get('/admin/verifikasi-identitas', [AdminCampusIdentityController::class, 'index'])
+        ->name('admin.campus-identities.index');
+    Route::post('/admin/verifikasi-identitas/{verification}/setujui', [AdminCampusIdentityController::class, 'approve'])
+        ->name('admin.campus-identities.approve');
+    Route::post('/admin/verifikasi-identitas/{verification}/tolak', [AdminCampusIdentityController::class, 'reject'])
+        ->name('admin.campus-identities.reject');
     Route::get('/storage/{folders}/{file_path}', [AdminController::class, 'suratPreview'])
-    ->name('surat-preview');
+        ->name('surat-preview');
 
     // listdata
     Route::get('/admin/listdata/suratizinpenelitian', [AdminController::class, 'listdataSuratIzinPenelitian'])->name('listdata.suratizinpenelitian');
@@ -192,18 +215,18 @@ Route::middleware(['admin'])->group(function () {
     // profil admin
     Route::get('/admin/profile/{id}', [AdminController::class, 'profile'])->name('admin.profile');
     Route::post('/admin/profile/{id}', [AdminController::class, 'changePassword'])->name('change.password.admin');
-   
+
     // change ttd
     Route::get('/admin/upload-ttd/', [AdminController::class, 'formchangeTtd'])->name('form.change.ttd');
     Route::post('/admin/upload-ttd/', [AdminController::class, 'changeTtdPimpinan'])->name('change.ttdpimpinan');
-    
+
     // data mhs
     Route::get('/admin/index-mahasiswa/', [AdminController::class, 'indexMahasiswa'])->name('index.mahasiswa');
     Route::get('/admin/data-mahasiswa/', [AdminController::class, 'getAllMahasiswa'])->name('data.mahasiswa');
     Route::post('/admin/data-mahasiswa/', [AdminController::class, 'addMahasiswa'])->name('add.mahasiswa');
     Route::patch('/admin/data-mahasiswa/{id}', [AdminController::class, 'editMahasiswa'])->name('edit.mahasiswa');
     Route::delete('/admin/-data-mahasiswa/{id}', [AdminController::class, 'deletelMahasiswa'])->name('delete.mahasiswa');
-    
+
     // export excel
     Route::get('/export-surat-izin-penelitian', [AdminController::class, 'exportSuratIzinPenelitian'])->name('export-surat-izin-penelitian');
     Route::get('/export-surat-keterangan-aktif', [AdminController::class, 'exportSuratKeteranganAktif'])->name('export-surat-keterangan-aktif');
@@ -215,13 +238,12 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/export-surat-pindah-kuliah', [AdminController::class, 'exportSuratPindahKuliah'])->name('export-surat-pindah-kuliah');
     Route::get('/export-surat-pengantar-magang', [AdminController::class, 'exportSuratPengantarMagang'])->name('export-surat-pengantar-magang');
     Route::get('/export-surat-rekomendasi-sept', [AdminController::class, 'exportSuratRekomendasiSept'])->name('export-surat-rekomendasi-sept');
-    
-      // import excel
+
+    // import excel
     Route::post('/admin/data-mahasiswa/import', [AdminController::class, 'importExcel'])->name('import.mahasiswa');
-    
-    
+
 });
-    Route::get('/clear-cache', function () {
+Route::get('/clear-cache', function () {
     if (request()->query('token') !== env('MAINT_TOKEN')) {
         abort(403, 'Forbidden');
     }

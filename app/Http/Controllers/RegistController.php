@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Mahasiswa;
-use Illuminate\Support\Str;
+use App\Models\User;
+use App\Services\CampusIdentityReconciliationService;
+use App\Services\CampusStudentService;
+use App\Services\VerificationEmailCooldown;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Throwable;
 
 class RegistController extends Controller
@@ -21,7 +23,7 @@ class RegistController extends Controller
         ]);
     }
 
-    public function cekNPM(Request $request)
+    public function cekNPM(Request $request, CampusStudentService $campusStudents)
     {
         $validated = $request->validate([
             'npm' => ['required', 'digits:13'],
@@ -33,7 +35,7 @@ class RegistController extends Controller
         $npm = $validated['npm'];
 
         try {
-            $mahasiswa = $this->findMahasiswaInApi($npm);
+            $mahasiswa = $campusStudents->findByNim($npm);
         } catch (Throwable $exception) {
             report($exception);
 
@@ -43,7 +45,7 @@ class RegistController extends Controller
                 ->with('error', 'Layanan verifikasi mahasiswa sedang tidak tersedia. Silakan coba lagi.');
         }
 
-        if (!$mahasiswa) {
+        if (! $mahasiswa) {
             return redirect()
                 ->route('regist')
                 ->withInput()
@@ -61,13 +63,17 @@ class RegistController extends Controller
             'mahasiswa' => [
                 'npm' => (string) $mahasiswa['nim'],
                 'nama_mahasiswa' => $mahasiswa['nama_mahasiswa'],
-                'email' => $this->resolveStudentEmail($mahasiswa),
+                'email' => $campusStudents->resolveEmail($mahasiswa),
             ],
         ]);
     }
 
-    public function create(Request $request)
-    {
+    public function create(
+        Request $request,
+        CampusStudentService $campusStudents,
+        CampusIdentityReconciliationService $reconciliation,
+        VerificationEmailCooldown $emailCooldown
+    ) {
         $validated = $request->validate([
             'npm' => ['required', 'digits:13', 'unique:users,npm'],
             'password' => ['required', 'min:6'],
@@ -78,7 +84,7 @@ class RegistController extends Controller
 
         try {
             // Verifikasi ulang agar data tersembunyi dari form tidak dapat dimanipulasi.
-            $mahasiswa = $this->findMahasiswaInApi($validated['npm']);
+            $mahasiswa = $campusStudents->findByNim($validated['npm']);
         } catch (Throwable $exception) {
             report($exception);
 
@@ -88,14 +94,14 @@ class RegistController extends Controller
                 ->with('error', 'Layanan verifikasi mahasiswa sedang tidak tersedia. Silakan coba lagi.');
         }
 
-        if (!$mahasiswa) {
+        if (! $mahasiswa) {
             return redirect()
                 ->route('regist')
                 ->withInput()
                 ->with('error', 'NPM tidak ditemukan pada data mahasiswa kampus.');
         }
 
-        $email = $this->resolveStudentEmail($mahasiswa);
+        $email = $campusStudents->resolveEmail($mahasiswa);
 
         if (User::where('email', $email)->exists()) {
             return redirect()
@@ -104,7 +110,7 @@ class RegistController extends Controller
                 ->with('error', 'Email mahasiswa telah terdaftar. Silakan masuk menggunakan akun Anda.');
         }
 
-        $user = DB::transaction(function () use ($validated, $mahasiswa, $email) {
+        $user = DB::transaction(function () use ($validated, $mahasiswa, $email, $reconciliation) {
             $user = User::create([
                 'npm' => $validated['npm'],
                 'name' => Str::title(trim($mahasiswa['nama_mahasiswa'])),
@@ -118,6 +124,8 @@ class RegistController extends Controller
                 ['user_id' => $user->id, 'foto' => 'user_profile.png']
             );
 
+            $reconciliation->recordNewRegistration($user, $mahasiswa);
+
             return $user;
         });
 
@@ -126,6 +134,7 @@ class RegistController extends Controller
 
         try {
             $user->sendEmailVerificationNotification();
+            $emailCooldown->markSent($user);
         } catch (Throwable $exception) {
             report($exception);
 
@@ -137,48 +146,5 @@ class RegistController extends Controller
         return redirect()
             ->route('verification.notice')
             ->with('status', 'verification-link-sent');
-    }
-
-    private function findMahasiswaInApi(string $nim): ?array
-    {
-        $baseUrl = rtrim((string) config('services.kampus.base_url'), '/');
-        $token = (string) config('services.kampus.token');
-
-        if ($baseUrl === '' || $token === '') {
-            throw new \RuntimeException('Konfigurasi API kampus belum lengkap.');
-        }
-
-        $response = Http::acceptJson()
-            ->withToken($token)
-            ->timeout(15)
-            ->get($baseUrl . '/mahasiswa/nim/' . urlencode($nim));
-
-        if ($response->notFound()) {
-            return null;
-        }
-
-        $response->throw();
-
-        $data = $response->json('data');
-        $mahasiswa = is_array($data) && array_is_list($data)
-            ? ($data[0] ?? null)
-            : $data;
-
-        if (!is_array($mahasiswa)
-            || (string) ($mahasiswa['nim'] ?? '') !== $nim
-            || trim((string) ($mahasiswa['nama_mahasiswa'] ?? '')) === '') {
-            return null;
-        }
-
-        return $mahasiswa;
-    }
-
-    private function resolveStudentEmail(array $mahasiswa): string
-    {
-        $email = strtolower(trim((string) ($mahasiswa['email'] ?? '')));
-
-        return filter_var($email, FILTER_VALIDATE_EMAIL)
-            ? $email
-            : $mahasiswa['nim'] . '@student.unsika.ac.id';
     }
 }
