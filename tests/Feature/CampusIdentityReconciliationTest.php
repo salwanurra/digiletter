@@ -63,41 +63,55 @@ class CampusIdentityReconciliationTest extends TestCase
         $this->assertSame('2210631170001', (string) $user->fresh()->mahasiswa->npm);
     }
 
-    public function test_different_npm_is_rejected_without_creating_a_review_request(): void
+    public function test_different_email_is_replaced_with_campus_email_and_needs_reverification(): void
     {
-        $user = User::factory()->create([
-            'name' => 'Siti Aminah',
-            'npm' => 9999999999999,
-            'email' => 'legacy@example.test',
-        ]);
-
-        try {
-            app(CampusIdentityReconciliationService::class)->submit($user, [
-                'nim' => '2210631170002',
-                'nama_mahasiswa' => 'SITI AMINAH',
-                'email' => '2210631170002@student.unsika.ac.id',
-            ]);
-
-            $this->fail('NPM yang berbeda seharusnya ditolak.');
-        } catch (\DomainException $exception) {
-            $this->assertStringContainsString('NPM akun tidak sama', $exception->getMessage());
-        }
-
-        $this->assertDatabaseMissing('campus_identity_verifications', ['user_id' => $user->id]);
-        $this->assertSame('9999999999999', (string) $user->fresh()->npm);
-        $this->assertNull($user->fresh()->mahasiswa);
-    }
-
-    public function test_different_email_is_rejected_even_when_npm_matches(): void
-    {
+        Notification::fake();
         $user = User::factory()->create([
             'name' => 'Siti Aminah',
             'npm' => 2210631170002,
             'email' => 'email-lama@example.test',
         ]);
 
+        $verification = app(CampusIdentityReconciliationService::class)->submit($user, [
+            'nim' => '2210631170002',
+            'nama_mahasiswa' => 'SITI AMINAH',
+            'email' => '2210631170002@student.unsika.ac.id',
+        ]);
+
+        $user->refresh();
+        $this->assertSame(CampusIdentityVerification::STATUS_VERIFIED, $verification->status);
+        $this->assertSame('2210631170002@student.unsika.ac.id', $user->email);
+        $this->assertSame('email-lama@example.test', $verification->old_email);
+        $this->assertNull($user->email_verified_at);
+    }
+
+    public function test_different_npm_is_replaced_with_campus_npm(): void
+    {
+        Notification::fake();
+        $user = User::factory()->create([
+            'name' => 'Siti Aminah',
+            'npm' => 9999999999999,
+            'email' => 'legacy@example.test',
+        ]);
+
+        app(CampusIdentityReconciliationService::class)->submit($user, [
+            'nim' => '2210631170002',
+            'nama_mahasiswa' => 'SITI AMINAH',
+            'email' => '2210631170002@student.unsika.ac.id',
+        ]);
+
+        $user->refresh();
+        $this->assertSame('2210631170002', (string) $user->npm);
+        $this->assertSame('2210631170002@student.unsika.ac.id', $user->email);
+        $this->assertSame('2210631170002', (string) $user->mahasiswa->npm);
+    }
+
+    public function test_identity_already_claimed_by_another_account_is_rejected(): void
+    {
+        User::factory()->create(['npm' => 2210631170002, 'email' => '2210631170002@student.unsika.ac.id']);
+        $user = User::factory()->create(['npm' => 9999999999999, 'email' => 'legacy@example.test']);
+
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Email akun tidak sama');
 
         app(CampusIdentityReconciliationService::class)->submit($user, [
             'nim' => '2210631170002',
@@ -106,7 +120,7 @@ class CampusIdentityReconciliationTest extends TestCase
         ]);
     }
 
-    public function test_admin_cannot_approve_a_request_with_different_npm_or_email(): void
+    public function test_admin_approval_applies_official_npm_and_email(): void
     {
         $user = User::factory()->create([
             'name' => 'Siti Aminah',
@@ -114,7 +128,6 @@ class CampusIdentityReconciliationTest extends TestCase
             'email' => 'legacy@example.test',
         ]);
         $admin = User::factory()->create(['role' => 'admin']);
-        $service = app(CampusIdentityReconciliationService::class);
 
         $verification = CampusIdentityVerification::create([
             'user_id' => $user->id,
@@ -128,19 +141,43 @@ class CampusIdentityReconciliationTest extends TestCase
             'campus_payload' => ['nim' => '2210631170002'],
         ]);
 
-        try {
-            $service->approve($verification, $admin, 'Identitas sudah diperiksa.');
+        app(CampusIdentityReconciliationService::class)->approve($verification, $admin, 'OK');
 
-            $this->fail('Admin seharusnya tidak dapat melewati pencocokan identitas ketat.');
-        } catch (\DomainException $exception) {
-            $this->assertStringContainsString('harus sama', $exception->getMessage());
-        }
-
-        $this->assertSame(CampusIdentityVerification::STATUS_PENDING, $verification->fresh()->status);
-        $this->assertSame('9999999999999', (string) $user->fresh()->npm);
+        $user->refresh();
+        $this->assertSame('2210631170002', (string) $user->npm);
+        $this->assertSame('2210631170002@student.unsika.ac.id', $user->email);
+        $this->assertSame(CampusIdentityVerification::STATUS_VERIFIED, $verification->fresh()->status);
     }
 
-    public function test_readonly_identity_values_from_the_form_are_ignored_by_the_server(): void
+    public function test_user_can_submit_corrected_npm_and_email_follows_api(): void
+    {
+        Notification::fake();
+        config([
+            'services.kampus.base_url' => 'https://kampus.example.test',
+            'services.kampus.token' => 'test-token',
+        ]);
+        Http::fake([
+            'https://kampus.example.test/mahasiswa/nim/2210631170005' => Http::response([
+                'data' => [
+                    'nim' => '2210631170005',
+                    'nama_mahasiswa' => 'DEWI LESTARI',
+                    'email' => '2210631170005@student.unsika.ac.id',
+                ],
+            ]),
+        ]);
+        $user = User::factory()->create(['npm' => 1111111111111, 'email' => 'lama@example.test']);
+
+        $this->actingAs($user)
+            ->post(route('campus-identity.submit'), ['npm' => '2210631170005', 'password' => 'password'])
+            ->assertRedirect(route('verification.notice'));
+
+        $user->refresh();
+        $this->assertSame('2210631170005', (string) $user->npm);
+        $this->assertSame('2210631170005@student.unsika.ac.id', $user->email);
+        $this->assertSame('Dewi Lestari', $user->name);
+    }
+
+    public function test_email_from_the_form_is_ignored_and_api_email_is_used(): void
     {
         config([
             'services.kampus.base_url' => 'https://kampus.example.test',
@@ -163,7 +200,7 @@ class CampusIdentityReconciliationTest extends TestCase
 
         $this->actingAs($user)
             ->post(route('campus-identity.submit'), [
-                'npm' => '9999999999999',
+                'npm' => '2210631170001',
                 'email' => 'penyerang@example.test',
                 'password' => 'password',
             ])
@@ -171,5 +208,28 @@ class CampusIdentityReconciliationTest extends TestCase
 
         $this->assertSame('2210631170001', (string) $user->fresh()->npm);
         $this->assertSame('2210631170001@student.unsika.ac.id', $user->fresh()->email);
+    }
+
+    public function test_lookup_returns_campus_email_for_preview(): void
+    {
+        config([
+            'services.kampus.base_url' => 'https://kampus.example.test',
+            'services.kampus.token' => 'test-token',
+        ]);
+        Http::fake([
+            'https://kampus.example.test/mahasiswa/nim/2210631170005' => Http::response([
+                'data' => [
+                    'nim' => '2210631170005',
+                    'nama_mahasiswa' => 'DEWI LESTARI',
+                    'email' => 'dewi@student.unsika.ac.id',
+                ],
+            ]),
+        ]);
+        $user = User::factory()->create(['npm' => 1111111111111, 'email' => 'lama@example.test']);
+
+        $this->actingAs($user)
+            ->getJson(route('campus-identity.lookup', ['npm' => '2210631170005']))
+            ->assertOk()
+            ->assertJson(['found' => true, 'email' => 'dewi@student.unsika.ac.id', 'name' => 'Dewi Lestari']);
     }
 }

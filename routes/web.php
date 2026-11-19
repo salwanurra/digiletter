@@ -116,6 +116,9 @@ Route::get('/chart', [ChartController::class, 'index'])->name('chart');
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/verifikasi-identitas-kampus', [CampusIdentityController::class, 'show'])
         ->name('campus-identity.show');
+    Route::get('/verifikasi-identitas-kampus/cek-npm', [CampusIdentityController::class, 'lookup'])
+        ->middleware('throttle:20,1')
+        ->name('campus-identity.lookup');
     Route::post('/verifikasi-identitas-kampus', [CampusIdentityController::class, 'submit'])
         ->middleware('throttle:5,1')
         ->name('campus-identity.submit');
