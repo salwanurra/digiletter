@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
-use Illuminate\Support\Facades\RateLimiter;
+use Carbon\Carbon;
 
 class VerificationEmailCooldown
 {
@@ -14,31 +14,56 @@ class VerificationEmailCooldown
 
     public function remaining(User $user): int
     {
-        return RateLimiter::availableIn($this->key($user));
+        $sentAt = User::query()
+            ->whereKey($user->getKey())
+            ->value('verification_email_sent_at');
+
+        if (! $sentAt) {
+            return 0;
+        }
+
+        $availableAt = Carbon::parse($sentAt)->addSeconds($this->seconds());
+
+        return max(0, $availableAt->timestamp - now()->timestamp);
     }
 
     public function acquire(User $user): bool
     {
-        return RateLimiter::attempt(
-            $this->key($user),
-            1,
-            fn () => true,
-            $this->seconds()
-        ) !== false;
+        $now = now();
+        $cutoff = $now->copy()->subSeconds($this->seconds());
+
+        $acquired = User::query()
+            ->whereKey($user->getKey())
+            ->where(function ($query) use ($cutoff) {
+                $query->whereNull('verification_email_sent_at')
+                    ->orWhere('verification_email_sent_at', '<=', $cutoff);
+            })
+            ->update(['verification_email_sent_at' => $now]) === 1;
+
+        if ($acquired) {
+            $user->setAttribute('verification_email_sent_at', $now);
+        }
+
+        return $acquired;
     }
 
     public function markSent(User $user): void
     {
-        RateLimiter::hit($this->key($user), $this->seconds());
+        $sentAt = now();
+
+        User::query()
+            ->whereKey($user->getKey())
+            ->update(['verification_email_sent_at' => $sentAt]);
+
+        $user->setAttribute('verification_email_sent_at', $sentAt);
     }
 
     public function clear(User $user): void
     {
-        RateLimiter::clear($this->key($user));
-    }
+        User::query()
+            ->whereKey($user->getKey())
+            ->update(['verification_email_sent_at' => null]);
 
-    private function key(User $user): string
-    {
-        return 'verification-email:'.$user->getKey();
+        $user->setAttribute('verification_email_sent_at', null);
     }
 }
