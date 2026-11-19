@@ -62,27 +62,31 @@ Verifikasi Identitas Kampus
                         </div>
                     @else
                         <div class="alert alert-primary">
-                            NPM dan email akun harus sama dengan database kampus. Kedua data ini dikunci agar identitas tidak dapat dialihkan ke akun lain.
+                            Masukkan NPM Anda. NPM, nama, dan email akun akan disamakan otomatis dengan database kampus.
                         </div>
                     @endif
 
                     <form action="{{ route('campus-identity.submit') }}" method="POST">
                         @csrf
                         <div class="mb-3">
-                            <label for="npm" class="form-label fw-medium">NPM akun</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="ti ti-lock"></i></span>
-                                <input type="text" class="form-control" id="npm" value="{{ auth()->user()->npm }}" readonly aria-readonly="true">
-                            </div>
-                            <div class="form-text">NPM diambil langsung dari akun dan tidak dapat diubah saat verifikasi.</div>
+                            <label for="npm" class="form-label fw-medium">NPM</label>
+                            <input type="text" inputmode="numeric" maxlength="13" class="form-control @error('npm') is-invalid @enderror" id="npm" name="npm" value="{{ old('npm', auth()->user()->npm) }}" required>
+                            <div class="form-text">Isi dengan NPM 13 angka. Data kampus di bawah akan diperbarui otomatis.</div>
                         </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label fw-medium">Email akun</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="ti ti-lock"></i></span>
-                                <input type="email" class="form-control" id="email" value="{{ auth()->user()->email }}" readonly aria-readonly="true">
+                        <div class="rounded border p-3 mb-3 bg-light" id="campus-preview" aria-live="polite">
+                            <div class="small mb-1 fw-bold">Data dari database kampus</div>
+                            <div class="" id="preview-name">{{ $preview['name'] ?? '-' }}</div>
+                            <div class="small mt-2">Email yang terdaftar pada akun Digiletter</div>
+                            <div id="preview-old-email">{{ auth()->user()->email }}</div>
+                            <div class="small mt-2">Email dari database kampus (tujuan verifikasi ulang)</div>
+                            <div class="fw-semibold " id="preview-email">{{ $preview['email'] ?? 'NPM tidak ditemukan pada data kampus.' }}</div>
+                            <div class="small mt-1 mb-0 fw-semibold" id="preview-note">
+                                @if (($preview['email'] ?? null) && strtolower($preview['email']) !== strtolower(auth()->user()->email))
+                                    Email akun akan diganti ke email dari database kampus dan link verifikasi dikirim ke sana.
+                                @elseif ($preview)
+                                    Email akun sudah sama dengan database kampus.
+                                @endif
                             </div>
-                            <div class="form-text">Email harus sama dengan email mahasiswa dari kampus.</div>
                         </div>
                         <div class="mb-4">
                             <label for="password" class="form-label fw-medium">Konfirmasi password akun</label>
@@ -100,4 +104,46 @@ Verifikasi Identitas Kampus
         </div>
     </div>
 </div>
+<script>
+(function () {
+    var input = document.getElementById('npm');
+    if (!input) return;
+    var oldEmail = @json(auth()->user()->email);
+    var nameEl = document.getElementById('preview-name');
+    var emailEl = document.getElementById('preview-email');
+    var noteEl = document.getElementById('preview-note');
+    var url = @json(route('campus-identity.lookup'));
+    var timer;
+
+    function render(data, message) {
+        if (!data) {
+            nameEl.textContent = '-';
+            emailEl.textContent = message;
+            noteEl.textContent = '';
+            return;
+        }
+        nameEl.textContent = data.name;
+        emailEl.textContent = data.email;
+        noteEl.textContent = data.email.toLowerCase() === String(oldEmail).toLowerCase()
+            ? 'Email akun sudah sama dengan email kampus.'
+            : 'Email akun akan diganti ke email kampus dan link verifikasi dikirim ke sana.';
+    }
+
+    input.addEventListener('input', function () {
+        clearTimeout(timer);
+        var npm = input.value.replace(/\D/g, '');
+        input.value = npm;
+        if (npm.length !== 13) {
+            render(null, 'Masukkan 13 digit NPM.');
+            return;
+        }
+        timer = setTimeout(function () {
+            fetch(url + '?npm=' + encodeURIComponent(npm), { headers: { 'Accept': 'application/json' } })
+                .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+                .then(function (d) { render(d); })
+                .catch(function () { render(null, 'NPM tidak ditemukan pada data kampus.'); });
+        }, 350);
+    });
+})();
+</script>
 @endsection
