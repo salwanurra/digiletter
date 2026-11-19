@@ -7,11 +7,42 @@ use App\Models\User;
 use App\Services\CampusIdentityReconciliationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class CampusIdentityReconciliationTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function test_registration_saves_program_study_from_campus_api(): void
+    {
+        Notification::fake();
+        config([
+            'services.kampus.base_url' => 'https://kampus.example.test',
+            'services.kampus.token' => 'test-token',
+        ]);
+        Http::fake([
+            'https://kampus.example.test/mahasiswa/nim/2210631170008' => Http::response([
+                'data' => [
+                    'nim' => '2210631170008',
+                    'nama_mahasiswa' => 'RINA MAHARANI',
+                    'email' => '2210631170008@student.unsika.ac.id',
+                    'nama_program_studi' => 'Teknik Informatika',
+                ],
+            ]),
+        ]);
+
+        $this->post(route('post_regist'), [
+            'npm' => '2210631170008',
+            'password' => 'password',
+            'prodi' => 'Sistem Informasi',
+        ])->assertRedirect(route('verification.notice'));
+
+        $user = User::where('npm', '2210631170008')->firstOrFail();
+
+        $this->assertSame('Informatika', $user->mahasiswa->prodi);
+        $this->assertSame('Rina Maharani', $user->name);
+    }
 
     public function test_matching_npm_is_verified_automatically_and_official_name_is_applied(): void
     {

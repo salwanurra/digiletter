@@ -50,6 +50,38 @@ class CampusStudentService
             : $student['nim'].'@student.unsika.ac.id';
     }
 
+    public function resolveProgramStudy(array $student): ?string
+    {
+        $candidates = [
+            data_get($student, 'prodi'),
+            data_get($student, 'nama_prodi'),
+            data_get($student, 'program_studi'),
+            data_get($student, 'nama_program_studi'),
+            data_get($student, 'prodi.nama'),
+            data_get($student, 'prodi.nama_prodi'),
+            data_get($student, 'program_studi.nama'),
+            data_get($student, 'program_studi.nama_program_studi'),
+        ];
+
+        foreach ($candidates as $candidate) {
+            if (! is_scalar($candidate)) {
+                continue;
+            }
+
+            $normalized = strtolower(trim((string) $candidate));
+
+            if (str_contains($normalized, 'sistem informasi')) {
+                return 'Sistem Informasi';
+            }
+
+            if (str_contains($normalized, 'informatika')) {
+                return 'Informatika';
+            }
+        }
+
+        return null;
+    }
+
     public function campusStudentId(array $student): ?string
     {
         foreach (['id', 'mahasiswa_id', 'student_id', 'id_mahasiswa'] as $key) {

@@ -46,11 +46,40 @@ Route::get('/register', [RegistController::class, 'index'])->name('regist');
 Route::post('/register', [RegistController::class, 'create'])->name('post_regist');
 Route::post('/cek-npm', [RegistController::class, 'cekNPM'])->name('cek-npm');
 Route::get('/email/verify', function (Request $request, VerificationEmailCooldown $cooldown) {
+    $user = $request->user();
+    $deliveryWarning = null;
+    $initialEmailSent = false;
+
+    if (! $user->hasVerifiedEmail()
+        && is_null($user->verification_email_sent_at)
+        && ! $request->session()->has('warning')
+        && $cooldown->acquire($user)) {
+        try {
+            $user->sendEmailVerificationNotification();
+            $initialEmailSent = true;
+        } catch (\Throwable $exception) {
+            $cooldown->clear($user);
+            report($exception);
+            $deliveryWarning = 'Email verifikasi belum dapat dikirim. Silakan coba lagi.';
+        }
+    }
+
     return view('auth.verify-email', [
-        'retryAfter' => $cooldown->remaining($request->user()),
+        'retryAfter' => $cooldown->remaining($user),
+        'deliveryWarning' => $deliveryWarning,
+        'initialEmailSent' => $initialEmailSent,
     ]);
 })->middleware('auth')->name('verification.notice');
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request, VerificationEmailCooldown $cooldown) {
+    $currentToken = (string) $request->user()->email_verification_token;
+    $requestToken = (string) $request->query('token');
+
+    abort_unless(
+        $currentToken !== '' && $requestToken !== '' && hash_equals($currentToken, $requestToken),
+        403,
+        'Tautan verifikasi ini sudah tidak berlaku. Gunakan email verifikasi terbaru.'
+    );
+
     $request->fulfill();
     $cooldown->clear($request->user());
 
@@ -225,7 +254,7 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/admin/data-mahasiswa/', [AdminController::class, 'getAllMahasiswa'])->name('data.mahasiswa');
     Route::post('/admin/data-mahasiswa/', [AdminController::class, 'addMahasiswa'])->name('add.mahasiswa');
     Route::patch('/admin/data-mahasiswa/{id}', [AdminController::class, 'editMahasiswa'])->name('edit.mahasiswa');
-    Route::delete('/admin/-data-mahasiswa/{id}', [AdminController::class, 'deletelMahasiswa'])->name('delete.mahasiswa');
+    Route::delete('/admin/data-mahasiswa/{id}', [AdminController::class, 'deletelMahasiswa'])->name('delete.mahasiswa');
 
     // export excel
     Route::get('/export-surat-izin-penelitian', [AdminController::class, 'exportSuratIzinPenelitian'])->name('export-surat-izin-penelitian');

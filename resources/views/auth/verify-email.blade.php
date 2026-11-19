@@ -21,9 +21,15 @@ Verifikasi Email
                     </div>
                 @endif
 
-                @if (session('warning'))
+                @if ($initialEmailSent)
+                    <div class="alert alert-success">
+                        Email verifikasi telah dikirim. Tautan berlaku selama {{ config('auth.verification.expire') }} menit.
+                    </div>
+                @endif
+
+                @if (session('warning') || $deliveryWarning)
                     <div class="alert alert-warning">
-                        {{ session('warning') }}
+                        {{ session('warning') ?: $deliveryWarning }}
                     </div>
                 @endif
 

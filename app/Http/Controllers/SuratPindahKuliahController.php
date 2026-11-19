@@ -19,11 +19,12 @@ class SuratPindahKuliahController extends Controller
     public function create($id)
     {
         $userAuth = auth()->user();
+        abort_unless($userAuth && $userAuth->mahasiswa && (int) $userAuth->id === (int) $id, 403);
         if ($userAuth && $userAuth->mahasiswa) {
             $navbarView = view('layouts/navbar', compact('userAuth'));
             $sidebarView = view('layouts/sidebar', compact('userAuth'));
 
-            $data = User::where('id', $id)->first();
+            $data = $userAuth;
 
             return view('pages.formsuratpindahkuliah', [$navbarView, $sidebarView, 'data' => $data, 'userAuth']);
         }
@@ -31,11 +32,14 @@ class SuratPindahKuliahController extends Controller
 
     public function store(Request $request)
     {
+        $user = auth()->user()->load('mahasiswa');
+        abort_unless($user->mahasiswa, 403);
+
         
         $data = new SuratPindahKuliah();
-        $data->nama_mhs = Str::title($request->input('nama_mhs'));
-        $data->npm = $request->input('npm');
-        $data->prodi = $request->input('prodi');
+        $data->nama_mhs = Str::title($user->name);
+        $data->npm = $user->npm;
+        $data->prodi = $user->mahasiswa->prodi;
         $data->no_hp = $request->input('no_hp');
         $data->semester = $request->input('semester');
         $data->nama_ortu = $request->input('nama_ortu');

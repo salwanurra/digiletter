@@ -52,6 +52,15 @@ class RegistController extends Controller
                 ->with('error', 'NPM tidak ditemukan pada data mahasiswa kampus.');
         }
 
+        $prodi = $campusStudents->resolveProgramStudy($mahasiswa);
+
+        if (! $prodi) {
+            return redirect()
+                ->route('regist')
+                ->withInput()
+                ->with('error', 'Program studi dari data kampus tidak dikenali. Silakan hubungi admin.');
+        }
+
         if (User::where('npm', $npm)->exists()) {
             return redirect()
                 ->route('regist')
@@ -64,6 +73,7 @@ class RegistController extends Controller
                 'npm' => (string) $mahasiswa['nim'],
                 'nama_mahasiswa' => $mahasiswa['nama_mahasiswa'],
                 'email' => $campusStudents->resolveEmail($mahasiswa),
+                'prodi' => $prodi,
             ],
         ]);
     }
@@ -102,6 +112,14 @@ class RegistController extends Controller
         }
 
         $email = $campusStudents->resolveEmail($mahasiswa);
+        $prodi = $campusStudents->resolveProgramStudy($mahasiswa);
+
+        if (! $prodi) {
+            return redirect()
+                ->route('regist')
+                ->withInput()
+                ->with('error', 'Program studi dari data kampus tidak dikenali. Silakan hubungi admin.');
+        }
 
         if (User::where('email', $email)->exists()) {
             return redirect()
@@ -110,7 +128,7 @@ class RegistController extends Controller
                 ->with('error', 'Email mahasiswa telah terdaftar. Silakan masuk menggunakan akun Anda.');
         }
 
-        $user = DB::transaction(function () use ($validated, $mahasiswa, $email, $reconciliation) {
+        $user = DB::transaction(function () use ($validated, $mahasiswa, $email, $prodi, $reconciliation) {
             $user = User::create([
                 'npm' => $validated['npm'],
                 'name' => Str::title(trim($mahasiswa['nama_mahasiswa'])),
@@ -121,7 +139,11 @@ class RegistController extends Controller
 
             Mahasiswa::updateOrCreate(
                 ['npm' => $validated['npm']],
-                ['user_id' => $user->id, 'foto' => 'user_profile.png']
+                [
+                    'user_id' => $user->id,
+                    'prodi' => $prodi,
+                    'foto' => 'user_profile.png',
+                ]
             );
 
             $reconciliation->recordNewRegistration($user, $mahasiswa);

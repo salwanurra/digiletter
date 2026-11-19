@@ -69,76 +69,62 @@ User Settings
                 <!--</div>-->
                 <hr class="my-0" />
                 <div class="card-body pb-0">
-                    <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                     <div class="mb-3">
                         <label class="form-label" for="basic-icon-default-fullname">Nama Mahasiswa</label>
                         <div class="input-group input-group-merge">
                             <span id="basic-icon-default-fullname2" class="input-group-text"></span>
-                            <input type="text" class="form-control alphabet-input" name="nama_mhs" id="basic-icon-default-fullname" value="{{ auth()->user()->name }}" />
+                            <input type="text" class="form-control" id="basic-icon-default-fullname" value="{{ $user->name }}" readonly />
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="basic-icon-default-company">NPM</label>
                         <div class="input-group input-group-merge">
                             <span id="basic-icon-default-company2" class="input-group-text"></span>
-                            <input type="text" id="basic-icon-default-company" name="npm" class="form-control numeric-input npm" value="{{ auth()->user()->npm }}" />
+                            <input type="text" id="basic-icon-default-company" class="form-control" value="{{ $user->npm }}" readonly />
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="basic-icon-default-company">Semester</label>
                         <div class="input-group input-group-merge">
                             <select name="semester" class="select2-icons form-select">
-                                <option value="I (Satu)">I (Satu)</option>
-                                <option value="II (Dua)">II (Dua)</option>
-                                <option value="III (Tiga)">III (Tiga)</option>
-                                <option value="IV (Empat)">IV (Empat)</option>
-                                <option value="V (Lima)">V (Lima)</option>
-                                <option value="VI (Enam)">VI (Enam)</option>
-                                <option value="VII (Tujuh)">VII (Tujuh)</option>
-                                <option value="VIII (Delapan)">VIII (Delapan)</option>
-                                <option value="IX (Sembilan)">IX (Sembilan)</option>
-                                <option value="X (Sepuluh)">X (Sepuluh)</option>
-                                <option value="XI (Sebelas)">XI (Sebelas)</option>
-                                <option value="XII (Dua Belas)">XII (Dua Belas)</option>
-                                <option value="XIII (Tiga Belas)">XIII (Tiga Belas)</option>
-                                <option value="XIV (Empat Belas)">XIV (Empat Belas)</option>
+                                @foreach (['I (Satu)', 'II (Dua)', 'III (Tiga)', 'IV (Empat)', 'V (Lima)', 'VI (Enam)', 'VII (Tujuh)', 'VIII (Delapan)', 'IX (Sembilan)', 'X (Sepuluh)', 'XI (Sebelas)', 'XII (Dua Belas)', 'XIII (Tiga Belas)', 'XIV (Empat Belas)'] as $semester)
+                                    <option value="{{ $semester }}" @selected(old('semester', $user->mahasiswa?->semester) === $semester)>{{ $semester }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="basic-icon-default-fullname">Prodi</label>
                         <div class="input-group input-group-merge">
-                            <select name="prodi" class="select2-icons form-select">
-                                <option value="Informatika" data-icon="ti ti-notebook">Informatika</option>
-                                <option value="Sistem Informasi" data-icon="ti ti-notebook">Sistem Informasi</option>
-                            </select>
+                            <span id="basic-icon-default-prodi" class="input-group-text"></span>
+                            <input type="text" id="basic-icon-default-prodi" class="form-control" value="{{ $user->mahasiswa?->prodi }}" readonly />
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label class="form-label" for="basic-icon-default-company">Domisili</label>
                         <div class="input-group input-group-merge">
                             <span id="basic-icon-default-company2" class="input-group-text"></span>
-                            <input type="text" id="basic-icon-default-company" name="domisili" class="form-control" value="{{ $user->mahasiswa->domisili ?? '' }}" />
+                            <input type="text" id="basic-icon-default-company" name="domisili" class="form-control" value="{{ old('domisili', $user->mahasiswa?->domisili) }}" />
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="basic-icon-default-fullname">Jenis Kelamin</label>
                         <div class="input-group input-group-merge">
                             <select name="jenis_kelamin" class="select2-icons form-select">
-                                <option value="Laki-laki">Laki-laki</option>
-                                <option value="Perempuan">Perempuan</option>
+                                <option value="Laki-laki" @selected(old('jenis_kelamin', $user->mahasiswa?->jenis_kelamin) === 'Laki-laki')>Laki-laki</option>
+                                <option value="Perempuan" @selected(old('jenis_kelamin', $user->mahasiswa?->jenis_kelamin) === 'Perempuan')>Perempuan</option>
                             </select>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="basic-icon-default-fullname">Status Mahasiswa</label>
-                        <input type="text" id="basic-icon-default-company" name="status" class="form-control" value="{{ $user->mahasiswa->status ?? '' }}" readonly />
-                    </div>
+                        <input type="text" id="basic-icon-default-company" class="form-control" value="{{ $user->mahasiswa?->status }}" readonly />
+                    </div> -->
                     <div class="mb-3">
                         <label class="form-label" for="basic-icon-default-phone">No HP</label>
                         <div class="input-group input-group-merge">
                             <span id="basic-icon-default-phone2" class="input-group-text"></span>
-                            <input type="number" id="basic-icon-default-phone" name="no_hp" class="form-control phone-mask numeric-input npm" value="{{ $user->mahasiswa->no_hp ?? '' }}" />
+                            <input type="text" inputmode="numeric" id="basic-icon-default-phone" name="no_hp" class="form-control phone-mask numeric-input npm" value="{{ old('no_hp', $user->mahasiswa?->no_hp) }}" />
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Update Profile</button>
