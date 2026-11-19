@@ -27,11 +27,26 @@ Verifikasi Email
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('verification.send') }}">
+                <form method="POST" action="{{ route('verification.send') }}" id="resend-verification-form">
                     @csrf
-                    <button type="submit" class="btn btn-primary w-100 mb-3">
-                        Kirim Ulang Email Verifikasi
+                    <button
+                        type="submit"
+                        class="btn btn-primary w-100 mb-2"
+                        id="resend-verification-button"
+                        data-retry-after="{{ $retryAfter }}"
+                        @disabled($retryAfter > 0)
+                    >
+                        <span id="resend-verification-label">
+                            {{ $retryAfter > 0 ? 'Kirim ulang dalam '.gmdate('i:s', $retryAfter) : 'Kirim Ulang Email Verifikasi' }}
+                        </span>
                     </button>
+                    <p class="small text-muted text-center mb-3" id="resend-verification-help" aria-live="polite">
+                        @if ($retryAfter > 0)
+                            Email baru dapat dikirim setelah waktu tunggu selesai.
+                        @else
+                            Belum menerima email? Periksa folder spam sebelum mengirim ulang.
+                        @endif
+                    </p>
                 </form>
 
                 <div class="text-center">
@@ -41,4 +56,38 @@ Verifikasi Email
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const button = document.getElementById('resend-verification-button');
+        const label = document.getElementById('resend-verification-label');
+        const help = document.getElementById('resend-verification-help');
+        let remaining = Number(button.dataset.retryAfter || 0);
+
+        if (remaining <= 0) {
+            return;
+        }
+
+        const endsAt = Date.now() + remaining * 1000;
+
+        const updateCountdown = function () {
+            remaining = Math.max(0, Math.ceil((endsAt - Date.now()) / 1000));
+
+            if (remaining === 0) {
+                button.disabled = false;
+                label.textContent = 'Kirim Ulang Email Verifikasi';
+                help.textContent = 'Belum menerima email? Periksa folder spam sebelum mengirim ulang.';
+                window.clearInterval(timer);
+                return;
+            }
+
+            const minutes = String(Math.floor(remaining / 60)).padStart(2, '0');
+            const seconds = String(remaining % 60).padStart(2, '0');
+            label.textContent = `Kirim ulang dalam ${minutes}:${seconds}`;
+        };
+
+        updateCountdown();
+        const timer = window.setInterval(updateCountdown, 1000);
+    });
+</script>
 @endsection

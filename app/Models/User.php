@@ -2,19 +2,17 @@
 
 namespace App\Models;
 
-use App\Models\Mahasiswa;
 use App\Notifications\ResetPasswordNotification;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmailContract
 {
-    use HasApiTokens, HasFactory, Notifiable, CanResetPassword;
+    use CanResetPassword, HasApiTokens, HasFactory, Notifiable;
 
     public function sendPasswordResetNotification($token): void
     {
@@ -59,4 +57,13 @@ class User extends Authenticatable implements MustVerifyEmailContract
         return $this->hasOne(Mahasiswa::class);
     }
 
+    public function campusIdentityVerification()
+    {
+        return $this->hasOne(CampusIdentityVerification::class);
+    }
+
+    public function hasVerifiedCampusIdentity(): bool
+    {
+        return $this->campusIdentityVerification?->status === CampusIdentityVerification::STATUS_VERIFIED;
+    }
 }
