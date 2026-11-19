@@ -36,7 +36,7 @@ Verifikasi Email
                         data-retry-after="{{ $retryAfter }}"
                         @disabled($retryAfter > 0)
                     >
-                        <span id="resend-verification-label">
+                        <span id="resend-verification-label" style="font-variant-numeric: tabular-nums;">
                             {{ $retryAfter > 0 ? 'Kirim ulang dalam '.gmdate('i:s', $retryAfter) : 'Kirim Ulang Email Verifikasi' }}
                         </span>
                     </button>
@@ -70,6 +70,8 @@ Verifikasi Email
 
         const endsAt = Date.now() + remaining * 1000;
 
+        let timer = null;
+
         const updateCountdown = function () {
             remaining = Math.max(0, Math.ceil((endsAt - Date.now()) / 1000));
 
@@ -77,7 +79,9 @@ Verifikasi Email
                 button.disabled = false;
                 label.textContent = 'Kirim Ulang Email Verifikasi';
                 help.textContent = 'Belum menerima email? Periksa folder spam sebelum mengirim ulang.';
-                window.clearInterval(timer);
+                if (timer !== null) {
+                    window.clearInterval(timer);
+                }
                 return;
             }
 
@@ -87,7 +91,7 @@ Verifikasi Email
         };
 
         updateCountdown();
-        const timer = window.setInterval(updateCountdown, 1000);
+        timer = window.setInterval(updateCountdown, 1000);
     });
 </script>
 @endsection
