@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use App\Notifications\ResetPasswordNotification;
+use App\Notifications\VerifyEmailNotification;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
+use Throwable;
 
 class User extends Authenticatable implements MustVerifyEmailContract
 {
@@ -17,6 +20,33 @@ class User extends Authenticatable implements MustVerifyEmailContract
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    public function sendEmailVerificationNotification(): void
+    {
+        $previousToken = $this->email_verification_token;
+
+        $this->forceFill([
+            'email_verification_token' => Str::random(64),
+        ])->saveQuietly();
+
+        try {
+            $this->notify(new VerifyEmailNotification);
+        } catch (Throwable $exception) {
+            $this->forceFill([
+                'email_verification_token' => $previousToken,
+            ])->saveQuietly();
+
+            throw $exception;
+        }
+    }
+
+    public function markEmailAsVerified(): bool
+    {
+        return $this->forceFill([
+            'email_verified_at' => $this->freshTimestamp(),
+            'email_verification_token' => null,
+        ])->save();
     }
 
     /**
@@ -40,6 +70,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
     protected $hidden = [
         'password',
         'remember_token',
+        'email_verification_token',
     ];
 
     /**

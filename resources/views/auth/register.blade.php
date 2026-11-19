@@ -74,6 +74,10 @@ Register
                         <label for="email" class="form-label">Email</label>
                         <input type="text" class="form-control" id="email" name="email" placeholder="Cth: npm@student.unsika.ac.id" value="{{ $mahasiswa['email'] }}" readonly/>
                     </div>
+                    <div class="mb-3">
+                        <label for="prodi" class="form-label">Program Studi</label>
+                        <input type="text" class="form-control" id="prodi" value="{{ $mahasiswa['prodi'] }}" readonly />
+                    </div>
                     <div class="mb-3 form-password-toggle">
                         <label class="form-label" for="password">Password</label>
                         <div class="input-group input-group-merge">

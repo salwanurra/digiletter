@@ -369,36 +369,33 @@ class AdminController extends Controller
 
     public function profile($id)
     {
+        abort_unless((int) auth()->id() === (int) $id, 403);
+
         $navbarView = view('admin/layouts/navbar');
         $sidebarView = view('admin/layouts/sidebar');
 
-        $user = User::with('mahasiswa')->where('name', auth()->user()->name)->find($id);
+        $user = auth()->user()->load('mahasiswa');
         $createdAt = $user->created_at;
 
-        return view('admin.pages.profile', [
-            $navbarView, $sidebarView,  'user' => $user, 'createdAt' => $createdAt,
-        ]);
+        return view('admin.pages.profile', compact('navbarView', 'sidebarView', 'user', 'createdAt'));
     }
 
     public function changePassword(Request $request, $id)
     {
+        abort_unless((int) auth()->id() === (int) $id, 403);
+
         $request->validate([
-            'current_password' => 'required',
-            'password' => 'required|min:6|confirmed',
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'min:8', 'confirmed'],
         ], [
             'current_password.required' => 'Password saat ini harus diisi.',
             'password.required' => 'Password baru harus diisi.',
-            'password.min' => 'Password minimal 6 karakter.',
+            'password.min' => 'Password minimal 8 karakter.',
             'password.confirmed' => 'Konfirmasi Password baru tidak cocok.',
+            'current_password.current_password' => 'Password saat ini tidak sesuai.',
         ]);
 
-        $user = User::find($id);
-
-        if (!Hash::check($request->current_password, $user->password)) {
-            return redirect()->back()->withInput()->with('error', 'Password saat ini tidak sesuai.');
-        }
-
-        $user->update(['password' => bcrypt($request->password)]);
+        auth()->user()->update(['password' => Hash::make($request->password)]);
 
         return redirect()->back()->with('success', 'Password berhasil diubah.');
     }

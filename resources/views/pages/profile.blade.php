@@ -19,7 +19,7 @@ User Profile
             </div>
             <div class="user-profile-header d-flex flex-column flex-sm-row text-sm-start text-center mb-4">
                 <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
-                    <img src="{{ asset('laravel/storage/app/public/foto-mahasiswa/' . $user->mahasiswa->foto) }}" alt="user image" class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img" />
+                    <img src="{{ asset('storage/foto-mahasiswa/' . ($user->mahasiswa->foto ?? 'user_profile.png')) }}" alt="user image" class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img" />
                 </div>
                 <div class="flex-grow-1 mt-3 mt-sm-5">
                     <div class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-4 flex-md-row flex-column gap-4">

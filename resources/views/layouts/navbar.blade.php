@@ -40,7 +40,7 @@
                                     <div class="flex-shrink-0 me-3">
                                         <div class="avatar">
                                             @if(isset($userAuth) && $userAuth && isset($userAuth->mahasiswa))
-                                            <img src="{{ asset('laravel/storage/app/public/foto-mahasiswa/' . $userAuth->mahasiswa->foto) }}" alt class="h-auto rounded-circle" />
+                                            <img src="{{ asset('storage/foto-mahasiswa/' . $userAuth->mahasiswa->foto) }}" alt class="h-auto rounded-circle" />
                                             @else
                                             <img src="{{ asset('/template/assets/img/avatars/user.png') }}" alt class="h-auto rounded-circle" />
                                             @endif
@@ -93,7 +93,7 @@
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
                         @if(isset($userAuth) && $userAuth && isset($userAuth->mahasiswa))
-                        <img src="{{ asset('laravel/storage/app/public/foto-mahasiswa/' . $userAuth->mahasiswa->foto) }}" alt class="h-auto rounded-circle" />
+                        <img src="{{ asset('storage/foto-mahasiswa/' . $userAuth->mahasiswa->foto) }}" alt class="h-auto rounded-circle" />
                         @else
                         <img src="{{ asset('/template/assets/img/avatars/user.png') }}" alt class="h-auto rounded-circle" />
                         @endif
@@ -106,7 +106,7 @@
                                 <div class="flex-shrink-0 me-3">
                                     <div class="avatar avatar-online">
                                         @if(isset($userAuth) && $userAuth && isset($userAuth->mahasiswa))
-                                        <img src="{{ asset('laravel/storage/app/public/foto-mahasiswa/' . $userAuth->mahasiswa->foto) }}" alt class="h-auto rounded-circle" />
+                                        <img src="{{ asset('storage/foto-mahasiswa/' . $userAuth->mahasiswa->foto) }}" alt class="h-auto rounded-circle" />
                                         @else
                                         <img src="{{ asset('/template/assets/img/avatars/user.png') }}" alt class="h-auto rounded-circle" />
                                         @endif
@@ -122,24 +122,24 @@
                     <li>
                         <div class="dropdown-divider"></div>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a class="dropdown-item" href="{{ route('user.profile', ['id' => auth()->id()]) }}">
                             <i class="ti ti-user-check me-2 ti-sm"></i>
                             <span class="align-middle">Profile</span>
                         </a>
-                    </li>
-                    <li>
+                    </li> -->
+                    <!-- <li>
                         <a class="dropdown-item" href="{{ route('user.settingAccount', ['id' => auth()->id()]) }}">
                             <i class="ti ti-settings me-2 ti-sm"></i>
                             <span class="align-middle">Pengaturan</span>
                         </a>
-                    </li>
-                     <li>
+                    </li> -->
+                     <!-- <li>
                          <a class="dropdown-item" href="{{ route('user.userGuide', ['id' => auth()->id()]) }}">
                              <i class="ti ti-help me-2 ti-sm"></i>
                              <span class="align-middle">User Guide</span>
                          </a>
-                     </li>
+                     </li> -->
                     <li>
                         <a class="dropdown-item" href="{{route('logout')}}">
                             <i class="ti ti-logout me-2 ti-sm"></i>

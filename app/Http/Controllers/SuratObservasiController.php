@@ -20,11 +20,12 @@ class SuratObservasiController extends Controller
     public function create($id)
     {
         $userAuth = auth()->user();
+        abort_unless($userAuth && $userAuth->mahasiswa && (int) $userAuth->id === (int) $id, 403);
         if ($userAuth && $userAuth->mahasiswa) {
             $navbarView = view('layouts/navbar', compact('userAuth'));
             $sidebarView = view('layouts/sidebar', compact('userAuth'));
 
-            $data = User::where('id', $id)->first();
+            $data = $userAuth;
 
             return view('pages.formsuratobservasi', [$navbarView, $sidebarView, 'data' => $data, 'userAuth']);
         }
@@ -32,9 +33,13 @@ class SuratObservasiController extends Controller
 
     public function store(Request $request)
     {
+        $user = auth()->user()->load('mahasiswa');
+        abort_unless($user->mahasiswa, 403);
+
         $data = new SuratObservasi();
-        $data->nama_mhs = auth()->user()->name;
-        $data->prodi = $request->input('prodi');
+        $data->nama_mhs = $user->name;
+        $data->npm = $user->npm;
+        $data->prodi = $user->mahasiswa->prodi;
         $data->tujuan_surat = $request->input('tujuan_surat');
         $data->tujuan_instansi = $request->input('tujuan_instansi');
         $data->domisili_instansi = $request->input('domisili_instansi');

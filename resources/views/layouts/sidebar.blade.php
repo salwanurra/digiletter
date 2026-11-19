@@ -4,7 +4,7 @@
 <!-- Menu -->
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
-        <a href="/" class="app-brand-link">
+        <a href="/home" class="app-brand-link">
             <img src="{{ asset('/template/assets/img/branding/e-letter-logo.png') }}" alt="E-Letter" width="180" height="85">
         </a>
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
@@ -24,7 +24,7 @@
             </a>
             <ul class="menu-sub">
                 <li class="menu-item {{ request()->routeIs('home') ? 'active' : '' }}">
-                    <a href="/" class="menu-link">
+                    <a href="/home" class="menu-link">
                         <div data-i18n="Pembuatan Surat">Pembuatan Surat</div>
                     </a>
                 </li>

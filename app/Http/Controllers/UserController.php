@@ -2,13 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\User;
 use App\Models\Mahasiswa;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Hash;
+use App\Models\SuratBebasPustaka;
+use App\Models\SuratIzinPenelitian;
+use App\Models\SuratKeteranganAktif;
+use App\Models\SuratKeteranganAktifOrtuPns;
+use App\Models\SuratObservasi;
+use App\Models\SuratPengajuanCuti;
+use App\Models\SuratPengantarMagang;
+use App\Models\SuratPengunduranDiri;
+use App\Models\SuratPindahKuliah;
+use App\Models\SuratRekomendasiSept;
+use App\Models\User;
 use App\Services\GoogleDriveService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -17,136 +26,108 @@ class UserController extends Controller
     {
         $userAuth = auth()->user();
 
-        // agar di navbar foto profile selalu sesuai
-        if ($userAuth && $userAuth->mahasiswa) {
-            $navbarView = view('layouts/navbar', compact('userAuth'));
-            $sidebarView = view('layouts/sidebar', compact('userAuth'));
+        $navbarView = view('layouts/navbar', compact('userAuth'));
+        $sidebarView = view('layouts/sidebar', compact('userAuth'));
 
-            return view('pages.home', compact('navbarView', 'sidebarView', 'userAuth'));
-        }
+        return view('pages.home', compact('navbarView', 'sidebarView', 'userAuth'));
     }
 
     public function profile($id)
     {
-        $userAuth = auth()->user();
-        if ($userAuth && $userAuth->mahasiswa) {
-            $navbarView = view('layouts/navbar', compact('userAuth'));
-            $sidebarView = view('layouts/sidebar', compact('userAuth'));
+        $user = $this->userForRoute($id)->load('mahasiswa');
+        $userAuth = $user;
+        $navbarView = view('layouts/navbar', compact('userAuth'));
+        $sidebarView = view('layouts/sidebar', compact('userAuth'));
+        $createdAt = $user->created_at;
 
-            $user = User::with('mahasiswa')->where('name', auth()->user()->name)->find($id);
-            $createdAt = $user->created_at;
-
-            return view('pages.profile', [
-                $navbarView, $sidebarView,  'user' => $user, 'userAuth', 'createdAt' => $createdAt,
-            ]);
-        }
+        return view('pages.profile', compact('navbarView', 'sidebarView', 'user', 'userAuth', 'createdAt'));
     }
 
     public function lengkapiProfile(Request $request, $id)
     {
+        $user = $this->userForRoute($id)->load('mahasiswa');
+
         $request->validate([
-            'domisili' => 'required',
-            'no_hp' => 'required|numeric',
-            'foto' => 'image|mimes:jpg,png,svg|max:500', // Menambahkan batasan ukuran file
+            'semester' => ['nullable', 'string', 'max:30'],
+            'prodi' => ['nullable', 'in:Informatika,Sistem Informasi'],
+            'domisili' => ['required', 'string', 'max:255'],
+            'jenis_kelamin' => ['nullable', 'in:Laki-laki,Perempuan'],
+            'no_hp' => ['required', 'regex:/^[0-9]{8,15}$/'],
+            'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:500'],
         ], [
             'domisili.required' => 'Domisili harus diisi',
             'no_hp.required' => 'Nomor HP harus diisi',
-            'foto.max' => 'Ukuran gambar tidak boleh melebihi 500 KB.'
+            'no_hp.regex' => 'Nomor HP harus terdiri dari 8 sampai 15 angka.',
+            'foto.max' => 'Ukuran gambar tidak boleh melebihi 500 KB.',
         ]);
-
-        // Memeriksa apakah ada kolom yang belum diisi
-        $columnsToCheck = ['domisili', 'no_hp'];
-        foreach ($columnsToCheck as $column) {
-            if (!$request->filled($column)) {
-                return redirect()->route('user.profile', ['id' => $id])->with('error', ucfirst($column) . ' harus diisi.');
-            }
-        }
 
         // Upload gambar baru
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
 
-            // Memeriksa ukuran file
-            if ($file->getSize() > 500 * 1024) { // Ukuran dalam byte, 500 KB = 500 * 1024 byte
-                return redirect()->route('user.profile', ['id' => $id])->with('error', 'Ukuran gambar tidak boleh melebihi 500 KB.');
-            }
-
-            // Proses upload jika ukuran sesuai
-            $npmMahasiswa = auth()->user()->npm;
-            $namaFile = auth()->user()->name . '-' . $npmMahasiswa . '-' . time() . '.' . $file->getClientOriginalExtension();
+            $namaFile = Str::slug($user->name).'-'.$user->npm.'-'.Str::random(12).'.'.$file->getClientOriginalExtension();
             $file->storeAs('public/foto-mahasiswa', $namaFile);
         } else {
             $namaFile = null;
         }
 
         // Ambil foto sebelumnya
-        $previousFoto = Mahasiswa::where('user_id', $id)->value('foto');
+        $previousFoto = $user->mahasiswa?->foto;
 
         // Tetapkan foto sebelumnya jika upload baru bernilai null
         $namaFile = $namaFile ?? $previousFoto;
 
         $data = [
-            'user_id' => $id,
+            'user_id' => $user->id,
             'semester' => $request->input('semester'),
-            'prodi' => $request->input('prodi'),
+            'prodi' => $user->mahasiswa?->prodi,
             'domisili' => $request->input('domisili'),
             'jenis_kelamin' => $request->input('jenis_kelamin'),
             'no_hp' => $request->input('no_hp'),
-            'status' => $request->input('status'),
-            'foto' => $namaFile
+            'status' => $user->mahasiswa?->status,
+            'foto' => $namaFile ?? 'user_profile.png',
         ];
 
-        Mahasiswa::updateOrCreate(['user_id' => $id], $data);
+        Mahasiswa::updateOrCreate(['user_id' => $user->id], $data);
 
-        return redirect()->route('user.profile',  ['id' => $id])->with('success', 'Data diri telah berhasil diubah!');
+        return redirect()->route('user.profile', ['id' => $user->id])->with('success', 'Data diri telah berhasil diubah!');
     }
 
     public function settingAccount($id)
     {
-        $userAuth = auth()->user();
-        if ($userAuth && $userAuth->mahasiswa) {
-            $navbarView = view('layouts/navbar', compact('userAuth'));
-            $sidebarView = view('layouts/sidebar', compact('userAuth'));
-            $user = User::with('mahasiswa')->where('name', auth()->user()->name)->find($id);
+        $user = $this->userForRoute($id)->load('mahasiswa');
+        $userAuth = $user;
+        $navbarView = view('layouts/navbar', compact('userAuth'));
+        $sidebarView = view('layouts/sidebar', compact('userAuth'));
 
-            return view('pages.settingAccount', [
-                $navbarView, $sidebarView, 'user' => $user, 'userAuth'
-            ]);
-        }
+        return view('pages.settingAccount', compact('navbarView', 'sidebarView', 'user', 'userAuth'));
     }
 
     public function settingSecurity($id)
     {
-        $userAuth = auth()->user();
-        if ($userAuth && $userAuth->mahasiswa) {
-            $navbarView = view('layouts/navbar', compact('userAuth'));
-            $sidebarView = view('layouts/sidebar', compact('userAuth'));
+        $userAuth = $this->userForRoute($id)->load('mahasiswa');
+        $navbarView = view('layouts/navbar', compact('userAuth'));
+        $sidebarView = view('layouts/sidebar', compact('userAuth'));
 
-            return view('pages.settingSecurity', [
-                $navbarView, $sidebarView, 'userAuth'
-            ]);
-        }
+        return view('pages.settingSecurity', compact('navbarView', 'sidebarView', 'userAuth'));
     }
 
     public function changePassword(Request $request, $id)
     {
+        $user = $this->userForRoute($id);
+
         $request->validate([
-            'current_password' => 'required',
-            'password' => 'required|min:6|confirmed',
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'min:8', 'confirmed'],
         ], [
             'current_password.required' => 'Password saat ini harus diisi.',
             'password.required' => 'Password baru harus diisi.',
-            'password.min' => 'Password minimal 6 karakter.',
+            'password.min' => 'Password minimal 8 karakter.',
             'password.confirmed' => 'Konfirmasi Password baru tidak cocok.',
+            'current_password.current_password' => 'Password saat ini tidak sesuai.',
         ]);
 
-        $user = User::find($id);
-
-        if (!Hash::check($request->current_password, $user->password)) {
-            return redirect()->back()->withInput()->with('error', 'Password saat ini tidak sesuai.');
-        }
-
-        $user->update(['password' => bcrypt($request->password)]);
+        $user->update(['password' => Hash::make($request->password)]);
 
         return redirect()->back()->with('success', 'Password berhasil diubah.');
     }
@@ -162,6 +143,29 @@ class UserController extends Controller
 
     public function downloadSurat($folders, $file_path)
     {
+        $modelsByFolder = [
+            'surat-izin-penelitian' => SuratIzinPenelitian::class,
+            'surat-keterangan-aktif' => SuratKeteranganAktif::class,
+            'surat-keterangan-aktif-ortu-pns' => SuratKeteranganAktifOrtuPns::class,
+            'surat-bebas-pustaka' => SuratBebasPustaka::class,
+            'surat-pengajuan-cuti' => SuratPengajuanCuti::class,
+            'surat-pengunduran-diri' => SuratPengunduranDiri::class,
+            'surat-observasi' => SuratObservasi::class,
+            'surat-pindah-kuliah' => SuratPindahKuliah::class,
+            'surat-pengantar-magang' => SuratPengantarMagang::class,
+            'surat-rekomendasi-sept' => SuratRekomendasiSept::class,
+        ];
+
+        abort_unless(isset($modelsByFolder[$folders]), 404);
+
+        $mayDownload = $modelsByFolder[$folders]::query()
+            ->where('npm', auth()->user()->npm)
+            ->where('file_path', $file_path)
+            ->where('status', 'disetujui')
+            ->exists();
+
+        abort_unless($mayDownload, 403);
+
         try {
             // Instantiate the Google Drive service
             $googleDriveService = new GoogleDriveService();
@@ -197,16 +201,20 @@ class UserController extends Controller
 
     public function userGuide($id)
     {
-        $userAuth = auth()->user();
-        if ($userAuth && $userAuth->mahasiswa) {
-            $navbarView = view('layouts/navbar', compact('userAuth'));
-            $sidebarView = view('layouts/sidebar', compact('userAuth'));
+        $userAuth = $this->userForRoute($id)->load('mahasiswa');
+        $navbarView = view('layouts/navbar', compact('userAuth'));
+        $sidebarView = view('layouts/sidebar', compact('userAuth'));
 
-            return view('pages.userGuide', [
-                $navbarView, $sidebarView, 'userAuth'
-            ]);
-        }
+        return view('pages.userGuide', compact('navbarView', 'sidebarView', 'userAuth'));
     }
-    
+
+    private function userForRoute($id): User
+    {
+        $user = auth()->user();
+
+        abort_unless($user && (int) $user->getKey() === (int) $id, 403);
+
+        return $user;
+    }
 
 }

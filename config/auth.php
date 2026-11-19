@@ -112,4 +112,8 @@ return [
 
     'password_timeout' => 10800,
 
+    'verification' => [
+        'expire' => (int) env('EMAIL_VERIFICATION_EXPIRE_MINUTES', 15),
+    ],
+
 ];
