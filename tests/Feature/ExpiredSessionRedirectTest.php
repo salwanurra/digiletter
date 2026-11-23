@@ -2,26 +2,32 @@
 
 namespace Tests\Feature;
 
+use App\Http\Middleware\VerifyCsrfToken;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Session\TokenMismatchException;
+use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
 class ExpiredSessionRedirectTest extends TestCase
 {
-    public function test_expired_web_session_redirects_to_login_with_a_message(): void
+    protected function setUp(): void
     {
-        $request = Request::create('/postlogin', 'POST');
-        $request->setLaravelSession($this->app['session']->driver());
+        parent::setUp();
 
-        $response = $this->app->make(\App\Exceptions\Handler::class)
-            ->render($request, new TokenMismatchException);
+        Route::middleware(['web', ForceCsrfVerification::class])
+            ->post('/_test/expired-session', fn () => response()->noContent());
+    }
 
-        $this->assertTrue($response->isRedirect(route('login')));
-        $this->assertSame(
-            'Sesi Anda telah berakhir. Silakan masuk kembali.',
-            $request->session()->get('error')
-        );
+    public function test_expired_web_session_redirects_to_login_and_persists_the_message(): void
+    {
+        $response = $this->post('/_test/expired-session');
+
+        $response
+            ->assertRedirect(route('login'))
+            ->assertSessionHas('error', 'Sesi Anda telah berakhir. Silakan masuk kembali.');
+
+        $this->get(route('login'))
+            ->assertOk()
+            ->assertSee('Sesi Anda telah berakhir. Silakan masuk kembali.');
     }
 
     public function test_authenticated_user_returns_to_the_previous_page_with_a_message(): void
@@ -31,34 +37,29 @@ class ExpiredSessionRedirectTest extends TestCase
             'email' => 'pengguna@example.test',
         ]));
 
-        $request = Request::create('/suratketeranganaktif', 'POST', server: [
-            'HTTP_REFERER' => route('home'),
-        ]);
-        $request->setLaravelSession($this->app['session']->driver());
+        $response = $this->from(route('home'))->post('/_test/expired-session');
 
-        $response = $this->app->make(\App\Exceptions\Handler::class)
-            ->render($request, new TokenMismatchException);
-
-        $this->assertTrue($response->isRedirect(route('home')));
-        $this->assertSame(
-            'Halaman telah kedaluwarsa. Silakan coba kembali.',
-            $request->session()->get('error')
-        );
+        $response
+            ->assertRedirect(route('home'))
+            ->assertSessionHas('error', 'Halaman telah kedaluwarsa. Silakan coba kembali.');
     }
 
     public function test_expired_json_session_keeps_the_419_status(): void
     {
-        $request = Request::create('/postlogin', 'POST', server: [
-            'HTTP_ACCEPT' => 'application/json',
-        ]);
+        $response = $this->postJson('/_test/expired-session');
 
-        $response = $this->app->make(\App\Exceptions\Handler::class)
-            ->render($request, new TokenMismatchException);
+        $response
+            ->assertStatus(419)
+            ->assertJson([
+                'message' => 'Sesi Anda telah berakhir. Silakan muat ulang halaman dan coba lagi.',
+            ]);
+    }
+}
 
-        $this->assertSame(419, $response->getStatusCode());
-        $this->assertSame(
-            'Sesi Anda telah berakhir. Silakan muat ulang halaman dan coba lagi.',
-            json_decode($response->getContent(), true, flags: JSON_THROW_ON_ERROR)['message']
-        );
+class ForceCsrfVerification extends VerifyCsrfToken
+{
+    protected function runningUnitTests(): bool
+    {
+        return false;
     }
 }
