@@ -160,6 +160,16 @@
             </script>
             @endif
 
+            @if (session()->has('error'))
+            <script>
+                Swal.fire({
+                    title: "Tidak dapat melanjutkan",
+                    icon: "warning",
+                    text: @json(session('error'))
+                });
+            </script>
+            @endif
+
             <!-- dataTable -->
             <script>
                 $(document).ready(function() {
