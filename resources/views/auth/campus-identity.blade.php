@@ -1,7 +1,7 @@
 @extends('loginTemplate')
 
 @section('pageTitle')
-Verifikasi Identitas Kampus
+Verifikasi Identitas Mahasiswa
 @endsection
 
 @section('authPage')
@@ -14,7 +14,7 @@ Verifikasi Identitas Kampus
                         <i class="ti ti-school fs-3"></i>
                     </div>
                     <div>
-                        <h3 class="mb-1 fw-semibold">Verifikasi identitas kampus</h3>
+                        <h3 class="mb-1 fw-semibold">Verifikasi identitas mahasiswa</h3>
                         <p class="text-muted mb-0">Hubungkan akun lama dengan data resmi mahasiswa.</p>
                     </div>
                 </div>

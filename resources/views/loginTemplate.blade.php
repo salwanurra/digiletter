@@ -84,24 +84,6 @@
     <script src="{{ asset('/template/assets/js/form-layouts.js') }}"></script>
     
     
-     @if (session()->has('error'))
-            <script>
-                Swal.fire({
-                    title: "Error"
-                    , icon: "success"
-                    , text: "{{ session('success') }}"
-                    , showConfirmButton: false
-                    , timer: 2000
-                }).then(() => {
-                    setTimeout(function() {
-                        window.location.href = '/login';
-                    }, 2000);
-                });
-
-            </script>
-            @endif
-    
-
 </body>
 
 </html>
