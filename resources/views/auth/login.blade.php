@@ -53,6 +53,11 @@ Login
 
                 <form id="formAuthentication" class="mb-3" action="{{route('postlogin')}}" method="post">
                     @csrf
+                    @if (request()->boolean('expired'))
+                    <span class="d-block text-danger mb-3" role="alert">
+                        Sesi Anda telah berakhir. Silakan masuk kembali.
+                    </span>
+                    @endif
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
                         <input type="text" class="form-control" id="email" name="email" placeholder="Masukkan email" autofocus />

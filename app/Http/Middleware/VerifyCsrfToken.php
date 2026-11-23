@@ -26,18 +26,27 @@ class VerifyCsrfToken extends Middleware
                 $fallback = auth()->user()->role === 'admin'
                     ? route('home.admin')
                     : route('home');
+                $destination = url()->previous($fallback);
 
-                return redirect()->back(fallback: $fallback)->with(
-                    'error',
-                    'Halaman telah kedaluwarsa. Silakan coba kembali.'
-                );
+                return redirect()->to($this->withExpiredFlag($destination));
             }
 
-            return redirect()->route('login')->with(
-                'error',
-                'Sesi Anda telah berakhir. Silakan masuk kembali.'
-            );
+            return redirect()->route('login', ['expired' => 1]);
         }
+    }
+
+    private function withExpiredFlag(string $url): string
+    {
+        $fragment = '';
+
+        if (($fragmentPosition = strpos($url, '#')) !== false) {
+            $fragment = substr($url, $fragmentPosition);
+            $url = substr($url, 0, $fragmentPosition);
+        }
+
+        $separator = str_contains($url, '?') ? '&' : '?';
+
+        return $url.$separator.'expired=1'.$fragment;
     }
 
     /**

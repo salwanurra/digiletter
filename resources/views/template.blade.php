@@ -160,12 +160,12 @@
             </script>
             @endif
 
-            @if (session()->has('error'))
+            @if (request()->boolean('expired') || session()->has('error'))
             <script>
                 Swal.fire({
                     title: "Tidak dapat melanjutkan",
                     icon: "warning",
-                    text: @json(session('error'))
+                    text: @json(request()->boolean('expired') ? 'Halaman telah kedaluwarsa. Silakan coba kembali.' : session('error'))
                 });
             </script>
             @endif
